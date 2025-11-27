@@ -6,7 +6,6 @@ import java.util.Date;
 public class Users {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public int barId;
     public String name;
     public Date startDate;
     public Date endDate = null;
@@ -15,14 +14,13 @@ public class Users {
 
     public Users() {}
 
-    public Users(int id, String name, Date startDate, Date endDate, String email, String password, int barId) {
+    public Users(int id, String name, Date startDate, Date endDate, String email, String password) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.email = email;
         this.password = password;
-        this.barId = barId;
     }
 
     public int getId() {
@@ -31,14 +29,6 @@ public class Users {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getBarId() {
-        return barId;
-    }
-
-    public void setBarId(int barId) {
-        this.barId = barId;
     }
 
     public String getName() {
