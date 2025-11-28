@@ -1,20 +1,19 @@
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
 @Entity
-public class Users {
+public class User {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public String name;
-    public Date startDate;
-    public Date endDate = null;
+    public String startDate;
+    public String endDate = null;
     public String email;
     public String password;
 
-    public Users() {}
+    public User() {}
 
-    public Users(int id, String name, Date startDate, Date endDate, String email, String password) {
+    public User(int id, String name, String startDate, String endDate, String email, String password) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -39,19 +38,19 @@ public class Users {
         this.name = name;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 

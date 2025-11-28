@@ -2,19 +2,19 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Products {
+public class Product {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
     public String productName;
 
-    public int price;
+    public double price;
 
     public int stock;
 
-    public Products() {}
+    public Product() {}
 
-    public Products(int stock, String productName, int id, int price) {
+    public Product(int stock, String productName, int id, double price) {
         this.stock = stock;
         this.productName = productName;
         this.id = id;
@@ -45,11 +45,11 @@ public class Products {
         this.stock = stock;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }
