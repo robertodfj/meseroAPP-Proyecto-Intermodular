@@ -1,0 +1,38 @@
+Semana 1 — Básicos y DAOs
+	•	28 Nov — Finalizar entidades (renombrar Product/User/Table si hace falta) y añadir Converters.
+	•	29 Nov — Terminar todos los DAOs (UserDao, ProductDao, TableDao, OrderDao, BarDao).
+	•	30 Nov — Crear AppDatabase y registrar TypeConverters.
+	•	01 Dic — Probar CRUD básico en una Activity/Unit test (insert/get/delete para cada entidad).
+	•	02 Dic — Corregir errores encontrados y refactor ligero.
+	•	03 Dic — Implementar validación email único en UserDao + lógica de registro.
+	•	04 Dic — Integrar allowMainThreadQueries() solo para pruebas; preparar para usar Executors/coroutines.
+
+Semana 2 — Lógica de negocio y relaciones
+	•	05 Dic — Implementar Order usando productId (Order entity) y crear OrderDao.
+	•	06 Dic — Crear relaciones OrderWithProduct y queries compuestas (pedidos por mesa, historial).
+	•	07 Dic — Implementar DAO methods avanzados (buscar por mesa, actualizar stock en Products).
+	•	08 Dic — Implementar repositorios/local data source (clases que envuelven DAOs).
+	•	09 Dic — Crear ViewModels básicos para Users, Products, Tables, Orders.
+	•	10 Dic — Implementar sesiones simples (SharedPreferences) para usuario logueado.
+	•	11 Dic — Pruebas de flujo: registro → login → crear producto → crear pedido.
+
+Semana 3 — UI básica y UX
+	•	12 Dic — Diseñar pantallas: Login/Register, Dashboard (mesas), Productos, Pedido.
+	•	13 Dic — Implementar Login/Register UI + conexión con ViewModel.
+	•	14 Dic — Implementar Dashboard de mesas (lista + detalle).
+	•	15 Dic — Implementar pantalla Productos (listar, crear, editar).
+	•	16 Dic — Implementar flujo crear pedido (seleccionar mesa, seleccionar productos, calcular total).
+	•	17 Dic — Añadir confirmaciones y validaciones en UI (email único, stock insuficiente).
+	•	18 Dic — Pruebas manuales UI completas; corregir errores de navegación.
+
+Semana 4 — Pulido, pruebas y entrega
+	•	19 Dic — Añadir persistencia correcta en background (Executors / Room async).
+	•	20 Dic — Implementar backups locales (export/import DB) o export CSV básico.
+	•	21 Dic — Tests funcionales: 5 casos críticos (registro, login, crear pedido, borrar producto, ver historial).
+	•	22 Dic — Optimización: usar LiveData/observables para listas, tiny mejoras rendimiento.
+	•	23 Dic — Diseño final y ajustes estéticos (colores, iconos, strings).
+	•	24 Dic — Preparar build de release y documentación mínima (README con pasos).
+	•	25 Dic — Buffer - correcciones finales y pruebas de instalación.
+	•	26 Dic — Buffer - correcciones críticas que surjan.
+	•	27 Dic — Prueba en otro dispositivo/emulador; verificar que DB persiste.
+	•	28 Dic — Entrega final: APK/Build firmado + README + breve checklist de funcionalidades implementadas.
