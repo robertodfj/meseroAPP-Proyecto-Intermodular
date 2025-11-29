@@ -8,23 +8,29 @@ public class LineOrder {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
-
+    public int orderId;
     public int productId;
     public int units;
-
     public double lineTotalPrice;
-
     public LineOrder() {}
 
-    public LineOrder(int productId, int units, double pricePerUnit) {
+    public LineOrder(int orderId, int productId, int units, double pricePerUnit) {
+        this.orderId = orderId;
         this.productId = productId;
         this.units = units;
         this.lineTotalPrice = pricePerUnit * units;
     }
-
     public int getId() { return id; }
 
     public void setId(int id) { this.id = id; }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
 
     public int getProductId() { return productId; }
 
