@@ -1,10 +1,11 @@
 package data.dao;
 
+import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
 import data.entity.Product;
-
+@Dao
 public interface ProductDAO {
     @Insert
     void insert(Product product);
