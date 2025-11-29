@@ -1,15 +1,19 @@
 package data.entity;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(
+        indices = {@Index(value = "email", unique = true)}
+)
 public class User {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public String name;
     public String startDate;
     public String endDate = null;
+
     public String email;
     public String password;
 
