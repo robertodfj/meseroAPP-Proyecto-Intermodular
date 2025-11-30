@@ -17,4 +17,17 @@ public interface UserDAO {
     @Query("SELECT * FROM User WHERE email = :email")
     User getByEmail(String email);
 
+    // Método por defecto para registro
+    public default boolean register(User newUser) {
+        String email = newUser.getEmail();
+        User existUser = getByEmail(email);
+
+        if (existUser != null) {
+            System.out.println("El email ya está en uso");
+            return false; // registro fallido
+        }
+
+        insert(newUser);
+        return true; // registro exitoso
+    }
 }
