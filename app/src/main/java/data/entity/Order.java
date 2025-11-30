@@ -8,15 +8,15 @@ public class Order {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public int barId;
-    public int productID;
+    public int tableId;
     public double totalPrice;
     public Order() {}
 
-    public Order(double totalPrice, int productID, int id, int barId) {
-        this.totalPrice = totalPrice;
-        this.productID = productID;
+    public Order(int id, int barId, int tableId, double totalPrice) {
         this.id = id;
         this.barId = barId;
+        this.tableId = tableId;
+        this.totalPrice = totalPrice;
     }
 
     public int getId() {
@@ -35,12 +35,12 @@ public class Order {
         this.barId = barId;
     }
 
-    public int getProductID() {
-        return productID;
+    public int getTableId() {
+        return tableId;
     }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
     }
 
     public double getTotalPrice() {

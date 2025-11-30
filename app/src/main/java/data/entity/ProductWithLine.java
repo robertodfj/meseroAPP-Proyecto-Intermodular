@@ -5,15 +5,13 @@ import androidx.room.Relation;
 
 import java.util.List;
 
-public class TableWithOrder {
+public class ProductWithLine {
     @Embedded
-    public Table table;
+    public Product product;
 
     @Relation(
             parentColumn = "id",
-            entityColumn = "tableId"
+            entityColumn = "productId"
     )
-
-    public List<Order> orders;
-
+    public List<LineOrder> lines;
 }
