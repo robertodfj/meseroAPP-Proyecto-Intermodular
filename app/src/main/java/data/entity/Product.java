@@ -7,11 +7,8 @@ import androidx.room.PrimaryKey;
 public class Product {
     @PrimaryKey(autoGenerate = true)
     public int id;
-
     public String productName;
-
     public double price;
-
     public int stock;
 
     public Product() {}

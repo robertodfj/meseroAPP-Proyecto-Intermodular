@@ -14,12 +14,13 @@ public class User {
     public String startDate;
     public String endDate = null;
     public int barId;
+    public String rol;
     public String email;
     public String password;
 
     public User() {}
 
-    public User(int id, String name, String startDate, String endDate, String email, String password, int barId) {
+    public User(int id, String name, String startDate, String endDate, String email, String password, int barId, String rol) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -27,6 +28,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.barId = barId;
+        this.rol = rol;
     }
 
     public int getId() {
@@ -83,5 +85,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 }
