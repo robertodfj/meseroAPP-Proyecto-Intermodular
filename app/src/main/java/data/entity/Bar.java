@@ -1,15 +1,14 @@
 package data.entity;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(indices = {@Index(value = "email", unique = true)})
 public class Bar {
     @PrimaryKey(autoGenerate = true)
     public int id;
-
     public String barName;
-
     public String email;
 
     public Bar() {}
