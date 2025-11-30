@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import data.entity.Bar;
+import data.entity.BarWithUsers;
 
 @Dao
 public interface BarDAO {
@@ -27,6 +28,9 @@ public interface BarDAO {
 
     @Query("UPDATE `Bar` SET email = :newEmail WHERE id = :id")
     void updateEmail(int id, String newEmail);
+
+    @Query("SELECT * FROM Bar WHERE id = :id")
+    BarWithUsers getBarWithUsers(int id);
 
     @Delete
     void delete(Bar bar);
