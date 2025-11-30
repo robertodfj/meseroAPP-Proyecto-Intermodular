@@ -65,4 +65,25 @@ public interface ProductDAO {
         System.out.println("El producto no existe");
         return false;
     }
+
+    public default boolean editStock(int id, int units) {
+        Product product = getById(id);
+
+        if (product == null) {
+            System.out.println("El producto no existe");
+            return false;
+        }
+
+        int currentStock = product.getStock();
+        int newStock = currentStock - units;
+
+        if (newStock < 0) {
+            System.out.println("No hay stock suficiente para realizarlo");
+            return false;
+        }
+
+        updateProductStock(id, newStock);
+        System.out.println("Stock actualizado. Nuevo stock: " + newStock);
+        return true;
+    }
 }
