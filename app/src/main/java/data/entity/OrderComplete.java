@@ -2,17 +2,17 @@ package data.entity;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
-
 import java.util.List;
 
-public class OrderWithLines {
+public class OrderComplete {
 
     @Embedded
     public Order order;
 
     @Relation(
+            entity = LineOrder.class,
             parentColumn = "id",
             entityColumn = "orderId"
     )
-    public List<LineOrder> lines;
+    public List<LineWithProduct> linesWithProducts;
 }

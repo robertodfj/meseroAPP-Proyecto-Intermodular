@@ -2,27 +2,30 @@ package data.database;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import data.dao.*;
 import data.entity.*;
 
 @Database(
         entities = {
-                Bar.class,
-                Table.class,
-                User.class,
-                Order.class,
+                Product.class,
                 LineOrder.class,
-                Product.class
+                Order.class,
+                User.class,
+                Bar.class,
+                Table.class
         },
         version = 1,
         exportSchema = false
 )
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
+
+    public abstract ProductDAO productDao();
+    public abstract LineOrderDAO lineOrderDao();
+    public abstract OrderDAO orderDao();
+    public abstract UserDAO userDao();
     public abstract BarDAO barDao();
     public abstract TableDAO tableDao();
-    public abstract UserDAO userDao();
-    public abstract ProductDAO productDao();
-    public abstract OrderDAO orderDao();
-    public abstract LineOrderDAO lineOrderDao();
 }

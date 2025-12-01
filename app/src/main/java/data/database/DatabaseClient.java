@@ -1,7 +1,6 @@
 package data.database;
 
 import android.content.Context;
-
 import androidx.room.Room;
 
 public class DatabaseClient {
@@ -13,8 +12,9 @@ public class DatabaseClient {
             instance = Room.databaseBuilder(
                             context.getApplicationContext(),
                             AppDatabase.class,
-                            "mesero_app_db"
-                    ).fallbackToDestructiveMigration()
+                            "bar_app_database"
+                    )
+                    .fallbackToDestructiveMigration()
                     .build();
         }
         return instance;

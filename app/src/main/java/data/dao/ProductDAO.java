@@ -78,7 +78,7 @@ public interface ProductDAO {
         int newStock = currentStock - units;
 
         if (newStock < 0) {
-            System.out.println("No hay stock suficiente para realizarlo");
+            System.out.println("No hay stock suficiente para realizarlo. Stock actual: " +currentStock);
             return false;
         }
 
