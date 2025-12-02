@@ -6,11 +6,18 @@ import data.dao.BarDAO;
 import data.entity.Bar;
 
 public class BarService {
+
+    private final BarDAO barDao;
+
+    public BarService(BarDAO barDao) {
+        this.barDao = barDao;
+    }
+
     public boolean createBar(Bar bar) {
-        Bar existBar = BarDAO.getByName(bar.getBarName());
+        Bar existBar = barDao.getByName(bar.getBarName());
 
         if (existBar == null) {
-            BarDAO.insert(bar);
+            barDao.insert(bar);
             System.out.println("Bar '" + bar.getBarName() + "' creado correctamente");
             return true;
         }
@@ -20,10 +27,10 @@ public class BarService {
     }
 
     public boolean deleteBar(int id) {
-        Bar bar = BarDAO.getById(id);
+        Bar bar = barDao.getById(id);
 
         if (bar != null) {
-            BarDAO.delete(bar);
+            barDao.delete(bar);
             System.out.println("Bar '" + bar.getBarName() + "' borrado correctamente");
             return true;
         }
@@ -33,16 +40,15 @@ public class BarService {
     }
 
     public boolean editBar(int id, String newName, String newEmail) {
-        Bar bar = BarDAO.getById(id);
+        Bar bar = barDao.getById(id);
 
         if (bar == null) {
             System.out.println("El bar no existe");
             return false;
         }
 
-        // Comprobaciones
         if (newName != null) {
-            Bar existBar = BarDAO.getByName(newName);
+            Bar existBar = barDao.getByName(newName);
             if (existBar != null && existBar.getId() != id) {
                 System.out.println("El nuevo nombre ya está en uso");
                 return false;
@@ -50,16 +56,15 @@ public class BarService {
         }
 
         if (newEmail != null) {
-            Bar existEmail = BarDAO.getByEmail(newEmail);
+            Bar existEmail = barDao.getByEmail(newEmail);
             if (existEmail != null && existEmail.getId() != id) {
                 System.out.println("El nuevo email ya está en uso");
                 return false;
             }
         }
 
-        // Actualizar
-        if (newName != null) BarDAO.updateName(id, newName);
-        if (newEmail != null) BarDAO.updateEmail(id, newEmail);
+        if (newName != null) barDao.updateName(id, newName);
+        if (newEmail != null) barDao.updateEmail(id, newEmail);
 
         System.out.println("Bar '" + id + "' editado correctamente");
         return true;
