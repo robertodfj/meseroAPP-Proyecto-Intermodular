@@ -8,20 +8,21 @@ public class Order {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
-
     public int barId;
     public int tableId;
+    public boolean closed = false;
     public double totalPrice;
     public String date;
 
     public Order() {}
 
-    public Order(int id, int barId, int tableId, double totalPrice, String date) {
+    public Order(int id, int barId, int tableId, double totalPrice, String date, boolean closed) {
         this.id = id;
         this.barId = barId;
         this.tableId = tableId;
         this.totalPrice = totalPrice;
         this.date = date;
+        this.closed = closed;
     }
 
     public int getId() { return id; }
@@ -38,4 +39,7 @@ public class Order {
 
     public String getDate() { return date; }
     public void setDate(String date) { this.date = date; }
+
+    public boolean getClosed() { return closed; }
+    public void setClosed(boolean closed) { this.closed = closed; }
 }
