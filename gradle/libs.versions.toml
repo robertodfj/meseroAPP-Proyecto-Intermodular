@@ -11,6 +11,8 @@ roomCompiler = "2.8.4"
 constraintlayout = "2.2.1"
 lifecycleLivedataKtx = "2.9.4"
 lifecycleViewmodelKtx = "2.9.4"
+activity = "1.11.0"
+navigationFragment = "2.9.6"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -24,6 +26,8 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
