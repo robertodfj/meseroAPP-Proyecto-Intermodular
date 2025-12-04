@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case "gerente":
+                loadFragment(new GerenteFragment());
                 break;
 
             default:
