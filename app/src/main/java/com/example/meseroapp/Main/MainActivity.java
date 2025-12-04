@@ -1,26 +1,36 @@
 package com.example.meseroapp.Main;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.meseroapp.R;
+import com.example.meseroapp.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        String role = SessionManager.getInstance(this).getUserRole();
+
+        switch (role) {
+            case "camarero":
+                setContentView(R.layout.fragment_camarero));
+                break;
+
+            case "cocina":
+                setContentView(R.layout.fragment_camarero));
+                break;
+
+            case "gerente":
+                setContentView(R.layout.fragment_camarero));
+                break;
+
+            default:
+                // Si no hay rol o es desconocido
+                setContentView(R.layout.fragment_camarero);
+                break;
+        }
     }
 }
