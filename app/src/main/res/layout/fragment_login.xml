@@ -11,4 +11,11 @@
         android:layout_width="294dp"
         android:layout_height="286dp"
         android:text="Registrase" />
+
+    <Button
+        android:id="@+id/buttonBoss"
+        android:layout_width="294dp"
+        android:layout_height="286dp"
+        android:layout_marginTop="200dp"
+        android:text="¿Eres jefe o gerente?" />
 </FrameLayout>

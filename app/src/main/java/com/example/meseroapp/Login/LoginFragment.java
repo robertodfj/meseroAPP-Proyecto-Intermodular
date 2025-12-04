@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.meseroapp.R;
-import com.example.meseroapp.RegisterFragment;
 
 public class LoginFragment extends Fragment {
 
@@ -33,6 +32,7 @@ public class LoginFragment extends Fragment {
         // Aquí conectarás botones, listeners y lógica del login.
         // Ejemplo:
         Button btn = view.findViewById(R.id.button);
+        Button btn2 = view.findViewById(R.id.buttonBoss);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +40,17 @@ public class LoginFragment extends Fragment {
                 RegisterFragment registerFragment = new RegisterFragment();
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, registerFragment) // fragment_container es el FrameLayout del Activity
+                        .addToBackStack(null) // Permite volver al login con el botón atrás
+                        .commit();
+            }
+        });
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BossFragment bossFragment = new BossFragment();
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, bossFragment) // fragment_container es el FrameLayout del Activity
                         .addToBackStack(null) // Permite volver al login con el botón atrás
                         .commit();
             }
