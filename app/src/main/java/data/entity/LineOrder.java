@@ -12,16 +12,20 @@ public class LineOrder {
     public int orderId;
     public int productId;
     public int units;
+    public int tableNumber;
+    public boolean done = false;
     public double linePrice; // price * units
 
     public LineOrder() {}
 
-    public LineOrder(int id, int orderId, int productId, int units, double linePrice) {
+    public LineOrder(int id, int orderId, int productId, int units, int tableNumber, boolean done, double linePrice) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
         this.units = units;
         this.linePrice = linePrice;
+        this.tableNumber = tableNumber;
+        this.done = done;
     }
 
     public int getId() { return id; }
@@ -35,6 +39,12 @@ public class LineOrder {
 
     public int getUnits() { return units; }
     public void setUnits(int units) { this.units = units; }
+
+    public int getTableNumber() { return tableNumber; }
+    public void setTableNumber(int tableNumber) { this.tableNumber = tableNumber; }
+
+    public boolean getDone() { return done; }
+    public void setDone(boolean done) { this.done = done; }
 
     public double getLinePrice() { return linePrice; }
     public void setLinePrice(double linePrice) { this.linePrice = linePrice; }
