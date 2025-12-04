@@ -21,13 +21,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case "cocina":
+                loadFragment(new CocinaFragment());
                 break;
 
             case "gerente":
                 break;
 
             default:
-                // Si no hay rol o es desconocido
+                loadFragment(new CamareroFragment());
                 break;
         }
     }
