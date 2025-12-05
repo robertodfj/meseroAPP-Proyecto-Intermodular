@@ -1,6 +1,12 @@
 package com.example.meseroapp.Login;
 
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +19,12 @@ import android.view.ViewGroup;
 import com.example.meseroapp.R;
 
 public class RegisterFragment extends Fragment {
+
+    private EditText etFullName, etEmail, etPassword;
+    private Spinner spinnerOpciones;
+    private Button btnRegister;
+    private TextView tvLogin, tvBossRegister, tvTitleRegister;
+    private ImageView imageViewRegister;
 
     public RegisterFragment() {
     }
@@ -29,8 +41,42 @@ public class RegisterFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Aquí conectarás botones, listeners y lógica del login.
-        // Ejemplo:
-        // Button btnLogin = view.findViewById(R.id.btnLogin);
+        etFullName = view.findViewById(R.id.etFullName);
+        etEmail = view.findViewById(R.id.etEmail);
+        spinnerOpciones = view.findViewById(R.id.spinnerOpciones);
+        etPassword = view.findViewById(R.id.etPassword);
+        btnRegister = view.findViewById(R.id.btnRegister);
+        tvLogin = view.findViewById(R.id.tvLogin);
+        tvBossRegister = view.findViewById(R.id.tvBossRegister);
+        tvTitleRegister = view.findViewById(R.id.tvTitleRegister);
+        imageViewRegister = view.findViewById(R.id.imageViewRegister);
+
+        // Opciones spinner
+        String[] opciones = {"camarero", "cocina", "gerente"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, opciones);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerOpciones.setAdapter(adapter);
+
+        tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginFragment loginFragment = new LoginFragment();
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, loginFragment) // frameLayout del Activity
+                        .addToBackStack(null) // permite volver al login con el botón atrás
+                        .commit();
+            }
+        });
+
+        tvBossRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BossFragment bossFragment = new BossFragment();
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, bossFragment) // frameLayout del Activity
+                        .addToBackStack(null) // permite volver al login con el botón atrás
+                        .commit();
+            }
+        });
     }
 }
