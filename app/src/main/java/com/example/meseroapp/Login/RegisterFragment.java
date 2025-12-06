@@ -25,12 +25,10 @@ import data.service.UserService;
 
 public class RegisterFragment extends Fragment {
 
-    private EditText etFullName, etEmail, etPassword;
+    private EditText etFullName, etEmail, etPassword, etBar;
     private Spinner spinnerOpciones;
     private Button btnRegister;
-    private TextView tvLogin, tvBossRegister, tvTitleRegister;
-    private ImageView imageViewRegister;
-
+    private TextView tvLogin, tvBossRegister;
     private final UserService userService = new UserService();
 
     public RegisterFragment() {
@@ -50,13 +48,13 @@ public class RegisterFragment extends Fragment {
 
         etFullName = view.findViewById(R.id.etFullName);
         etEmail = view.findViewById(R.id.etEmail);
+        etBar = view.findViewById(R.id.etBar);
         spinnerOpciones = view.findViewById(R.id.spinnerOpciones);
         etPassword = view.findViewById(R.id.etPassword);
         btnRegister = view.findViewById(R.id.btnRegister);
         tvLogin = view.findViewById(R.id.tvLogin);
         tvBossRegister = view.findViewById(R.id.tvBossRegister);
-        tvTitleRegister = view.findViewById(R.id.tvTitleRegister);
-        imageViewRegister = view.findViewById(R.id.imageViewRegister);
+
 
         // Opciones spinner
         String[] opciones = {"camarero", "cocina", "gerente"};
@@ -94,8 +92,10 @@ public class RegisterFragment extends Fragment {
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
                 String role = spinnerOpciones.getSelectedItem().toString();
+                int barID = Integer.parseInt(etBar.getText().toString().trim());
 
-                User user = new User(fullName, email, password, 1, role);
+                User user = new User(fullName, email, password, barID, role);
+                userService.register(user);
             }
         });
     }
