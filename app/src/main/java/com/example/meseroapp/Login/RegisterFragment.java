@@ -18,6 +18,11 @@ import android.view.ViewGroup;
 
 import com.example.meseroapp.R;
 
+import java.util.Date;
+
+import data.entity.User;
+import data.service.UserService;
+
 public class RegisterFragment extends Fragment {
 
     private EditText etFullName, etEmail, etPassword;
@@ -25,6 +30,8 @@ public class RegisterFragment extends Fragment {
     private Button btnRegister;
     private TextView tvLogin, tvBossRegister, tvTitleRegister;
     private ImageView imageViewRegister;
+
+    private final UserService userService = new UserService();
 
     public RegisterFragment() {
     }
@@ -76,6 +83,19 @@ public class RegisterFragment extends Fragment {
                         .replace(R.id.fragment_container, bossFragment) // frameLayout del Activity
                         .addToBackStack(null) // permite volver al login con el botón atrás
                         .commit();
+            }
+        });
+
+        // Registar un usuario en la BD
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fullName = etFullName.getText().toString().trim();
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+                String role = spinnerOpciones.getSelectedItem().toString();
+
+                User user = new User(fullName, email, password, 1, role);
             }
         });
     }
