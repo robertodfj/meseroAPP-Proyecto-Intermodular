@@ -51,38 +51,22 @@ public class BossFragment extends Fragment {
         btnCreate = view.findViewById(R.id.btnCreate);
 
         btnCreate.setOnClickListener(v -> {
+            int token = (int) (Math.random() * 9000) + 1000;
+            // TODO: ENVIAR EMAIL CON TOKEN
+            System.out.println(token);
 
             String email = etEmail.getText().toString().trim();
             String barName = etBarName.getText().toString().trim();
 
-            Bar bar = new Bar();
-            bar.setBarName(barName);
-            bar.setEmail(email);
-
-            int token = (int) (Math.random() * 9000) + 1000;
-            bar.setToken(token);
-            // TODO: ENVIAR EMAIL CON TOKEN
-            System.out.println(token);
-
             // EJECUTAR EN HILO SECUNDARIO PARA NO CRASH
             Executors.newSingleThreadExecutor().execute(() -> {
 
-                boolean creado = barService.createBar(bar);
+
 
                 requireActivity().runOnUiThread(() -> {
-
-                    if (!creado) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                        builder.setTitle("Error");
-                        builder.setMessage("Ya existe un bar con ese nombre.");
-                        builder.setPositiveButton("OK", null);
-                        builder.show();
-                        return;
-                    }
-
                     // PRIMER DIALOGO: TOKEN
                     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                    builder.setTitle("Bar creado");
+                    builder.setTitle("Verificar email");
                     builder.setMessage("Introduce el token enviado al correo:");
 
                     final EditText input = new EditText(requireContext());
@@ -102,6 +86,11 @@ public class BossFragment extends Fragment {
 
                             if (tokenIngresado.equals(String.valueOf(token))) {
                                 dialog.dismiss();
+
+                                Bar bar = new Bar();
+                                bar.setBarName(barName);
+                                bar.setEmail(email);
+                                barService.createBar(bar);
 
                                 // SEGUNDO DIALOGO: MOSTRAR ID DEL BAR
                                 AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext());

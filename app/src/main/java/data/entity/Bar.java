@@ -10,15 +10,13 @@ public class Bar {
     public int id;
     public String barName;
     public String email;
-    public int token = 0;
 
     public Bar() {}
 
-    public Bar(int id, String barName, String email, int token) {
+    public Bar(int id, String barName, String email) {
         this.id = id;
         this.barName = barName;
         this.email = email;
-        this.token = token;
     }
 
     public int getId() {
@@ -39,6 +37,4 @@ public class Bar {
     public void setEmail(String email) {
         this.email = email;
     }
-    public int getToken() {return token;}
-    public void setToken(int token) {this.token = token;}
 }
