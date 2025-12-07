@@ -1,13 +1,7 @@
 package com.example.meseroapp.Login;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +28,7 @@ public class LoginFragment extends Fragment {
     private TextView tvRegister, tvBossRegister;
     private UserService userService;
 
-    public LoginFragment() {
-    }
+    public LoginFragment() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -49,54 +42,59 @@ public class LoginFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Inicializamos la base de datos y el servicio de usuario
         AppDatabase db = AppDatabase.getInstance(requireContext());
         userService = new UserService(db.userDao());
 
-        // Conexión con los elementos
+        // Conexión con los elementos del layout
         etEmail = view.findViewById(R.id.etEmail);
         etPassword = view.findViewById(R.id.etPassword);
         btnLogin = view.findViewById(R.id.btnLogin);
         tvRegister = view.findViewById(R.id.tvRegister);
         tvBossRegister = view.findViewById(R.id.tvBossRegister);
 
-        tvRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RegisterFragment registerFragment = new RegisterFragment();
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, registerFragment) // frameLayout del Activity
-                        .addToBackStack(null) // permite volver al login con el botón atrás
-                        .commit();
-            }
+        // Listener para ir al registro normal
+        tvRegister.setOnClickListener(v -> {
+            RegisterFragment registerFragment = new RegisterFragment();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, registerFragment) // frameLayout del Activity
+                    .addToBackStack(null) // permite volver al login con el botón atrás
+                    .commit();
         });
 
-        tvBossRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BossFragment bossFragment = new BossFragment();
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, bossFragment) // frameLayout del Activity
-                        .addToBackStack(null) // permite volver al login con el botón atrás
-                        .commit();
-            }
+        // Listener para ir al registro de jefe
+        tvBossRegister.setOnClickListener(v -> {
+            BossFragment bossFragment = new BossFragment();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, bossFragment) // frameLayout del Activity
+                    .addToBackStack(null) // permite volver al login con el botón atrás
+                    .commit();
         });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = etEmail.getText().toString().trim();
-                String password = etPassword.getText().toString().trim();
+        // Listener para el botón de login
+        btnLogin.setOnClickListener(v -> {
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
 
-                if (userService.login(email, password)){
-                    // Login exitoso -> a la patalla principal
-                    Intent intent = new Intent(requireContext(), MainActivity.class);
-                    startActivity(intent);
-                    requireActivity().finish();
-                } else {
-                    // Mostrar mensaje de error
-                    Toast.makeText(requireContext(), "Email o contraseña incorrectos o usuario inexistente", Toast.LENGTH_SHORT).show();
-                }
-            }
+            // Ejecutamos la consulta a la base de datos en un hilo secundario
+            new Thread(() -> {
+                boolean success = userService.login(email, password);
+
+                // Volvemos al hilo principal para actualizar la UI
+                requireActivity().runOnUiThread(() -> {
+                    if (success) {
+                        // Login exitoso -> ir a la pantalla principal
+                        Intent intent = new Intent(requireContext(), MainActivity.class);
+                        startActivity(intent);
+                        requireActivity().finish();
+                    } else {
+                        // Mostrar mensaje de error
+                        Toast.makeText(requireContext(),
+                                "Email o contraseña incorrectos o usuario inexistente",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }).start();
         });
     }
 }
