@@ -39,7 +39,6 @@ public class UserService {
     public boolean editUser(String email, String newName, String newEmail, String endDate) {
         User user = userDao.getByEmail(email);
         if (user != null) {
-            if (endDate != null) userDao.updateFechaFin(user.getId(), endDate);
             if (newEmail != null) userDao.updateEmail(user.getId(), newEmail);
             if (newName != null) userDao.updateNombre(user.getId(), newName);
             System.out.println("Usuario editado correctamente");

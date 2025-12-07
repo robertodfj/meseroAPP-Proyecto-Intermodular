@@ -10,13 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.meseroapp.R;
+
+import java.util.concurrent.Executors;
 
 import data.database.AppDatabase;
 import data.entity.Bar;
@@ -60,69 +61,81 @@ public class BossFragment extends Fragment {
 
             int token = (int) (Math.random() * 9000) + 1000;
             bar.setToken(token);
+            // TODO: ENVIAR EMAIL CON TOKEN
+            System.out.println(token);
 
-            System.out.printf("Token para %s: %d\n", email, token);
-            // TODO: Enviar token por email
-            System.out.println("token email:" + token); // Solo para pruebas TODO eliminar sout
+            // EJECUTAR EN HILO SECUNDARIO PARA NO CRASH
+            Executors.newSingleThreadExecutor().execute(() -> {
 
-            if (barService.createBar(bar)) {
+                boolean creado = barService.createBar(bar);
 
-                // PRIMER DIALOGO: Pedir token
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle("Bar creado");
-                builder.setMessage("Introduce el token enviado al correo:");
+                requireActivity().runOnUiThread(() -> {
 
-                final EditText input = new EditText(requireContext());
-                input.setHint("Token aquí...");
-                builder.setView(input);
+                    if (!creado) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                        builder.setTitle("Error");
+                        builder.setMessage("Ya existe un bar con ese nombre.");
+                        builder.setPositiveButton("OK", null);
+                        builder.show();
+                        return;
+                    }
 
-                builder.setPositiveButton("Verificar", null);
-                builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
+                    // PRIMER DIALOGO: TOKEN
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                    builder.setTitle("Bar creado");
+                    builder.setMessage("Introduce el token enviado al correo:");
 
-                AlertDialog dialog = builder.create();
+                    final EditText input = new EditText(requireContext());
+                    input.setHint("Token aquí...");
+                    builder.setView(input);
 
-                dialog.setOnShowListener(d1 -> {
-                    Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                    button.setOnClickListener(v1 -> {
+                    builder.setPositiveButton("Verificar", null);
+                    builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
 
-                        String tokenIngresado = input.getText().toString().trim();
+                    AlertDialog dialog = builder.create();
 
-                        if (tokenIngresado.equals(String.valueOf(token))) {
-                            dialog.dismiss();
+                    dialog.setOnShowListener(d1 -> {
+                        Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        button.setOnClickListener(v1 -> {
 
-                            // SEGUNDO DIALOGO: Mostrar ID del bar
-                            AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext());
-                            builder2.setTitle("ATENCIÓN");
-                            builder2.setMessage("Apunta este CÓDIGO BAR. Los empleados lo necesitarán para registrarse.");
+                            String tokenIngresado = input.getText().toString().trim();
 
-                            TextView textView = new TextView(requireContext());
-                            textView.setPadding(50, 30, 50, 30);
-                            textView.setTextSize(20);
-                            textView.setText("CÓDIGO BAR: " + bar.getId());
+                            if (tokenIngresado.equals(String.valueOf(token))) {
+                                dialog.dismiss();
 
-                            builder2.setView(textView);
+                                // SEGUNDO DIALOGO: MOSTRAR ID DEL BAR
+                                AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext());
+                                builder2.setTitle("ATENCIÓN");
+                                builder2.setMessage("Apunta este CÓDIGO BAR. Los empleados lo necesitarán para registrarse.");
 
-                            builder2.setPositiveButton("Apuntado!", (dialog2, which2) -> {
-                                // Apuntado el codigo -> volver al register
-                                RegisterFragment registerFragment = new RegisterFragment();
-                                getParentFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, registerFragment)
-                                        .addToBackStack(null)
-                                        .commit();
-                            });
+                                TextView textView = new TextView(requireContext());
+                                textView.setPadding(50, 30, 50, 30);
+                                textView.setTextSize(20);
+                                textView.setText("CÓDIGO BAR: " + bar.getId());
 
-                            builder2.setCancelable(false);
-                            builder2.show();
+                                builder2.setView(textView);
 
-                        } else {
-                            input.setError("Token incorrecto");
-                        }
+                                builder2.setPositiveButton("Apuntado!", (dialog2, which2) -> {
+                                    RegisterFragment registerFragment = new RegisterFragment();
+                                    getParentFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, registerFragment)
+                                            .addToBackStack(null)
+                                            .commit();
+                                });
+
+                                builder2.setCancelable(false);
+                                builder2.show();
+
+                            } else {
+                                input.setError("Token incorrecto");
+                            }
+                        });
                     });
+
+                    dialog.show();
+
                 });
-
-                dialog.show();
-            }
-
+            });
         });
     }
 }
