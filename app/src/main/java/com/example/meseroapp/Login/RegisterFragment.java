@@ -20,6 +20,7 @@ import com.example.meseroapp.R;
 
 import java.util.Date;
 
+import data.database.AppDatabase;
 import data.entity.User;
 import data.service.UserService;
 
@@ -29,7 +30,7 @@ public class RegisterFragment extends Fragment {
     private Spinner spinnerOpciones;
     private Button btnRegister;
     private TextView tvLogin, tvBossRegister;
-    private final UserService userService = new UserService();
+    private UserService userService;
 
     public RegisterFragment() {
     }
@@ -45,6 +46,9 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        AppDatabase db = AppDatabase.getInstance(requireContext());
+        userService = new UserService(db.userDao());
 
         etFullName = view.findViewById(R.id.etFullName);
         etEmail = view.findViewById(R.id.etEmail);
@@ -94,7 +98,15 @@ public class RegisterFragment extends Fragment {
                 String role = spinnerOpciones.getSelectedItem().toString();
                 int barID = Integer.parseInt(etBar.getText().toString().trim());
 
-                User user = new User(fullName, email, password, barID, role);
+                // Crear usuario usando constructor vacío
+                User user = new User();
+                user.setName(fullName);
+                user.setEmail(email);
+                user.setPassword(password);
+                user.setRol(role);
+                user.setBarId(barID);
+
+                // Registrar usuario
                 userService.register(user);
             }
         });
