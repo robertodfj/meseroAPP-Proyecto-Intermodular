@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.meseroapp.R;
 
@@ -107,7 +108,16 @@ public class RegisterFragment extends Fragment {
                 user.setBarId(barID);
 
                 // Registrar usuario
-                userService.register(user);
+                if (userService.register(user)){
+                    // Volver al login
+                    LoginFragment loginFragment = new LoginFragment();
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, loginFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }else {
+                    Toast.makeText(requireContext(), "El email ya esta en uso", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
