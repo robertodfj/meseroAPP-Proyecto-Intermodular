@@ -190,6 +190,6 @@ public class RegisterFragment extends Fragment {
 
                 });
 
-            }).start();  // ← HILO SECUNDARIO PRINCIPAL
+            }).start();
         });}
 }
