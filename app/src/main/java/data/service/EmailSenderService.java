@@ -31,6 +31,7 @@ public class EmailSenderService {
     private static final String EMAIL_USERNAME = "meseroapp@gmail.com";
     private static final String EMAIL_PASSWORD = "********"; // remplazar por contraseña real
 
+
     public EmailSenderService(OrderDAO orderDao, ProductDAO productDao, LineOrderDAO lineDao, BarDAO barDAO) {
         this.orderDao = orderDao;
         this.productDao = productDao;
@@ -167,5 +168,62 @@ public class EmailSenderService {
         }
     }
 
+    public Boolean sendUserVerifyEmail(String recipient, int tokenVerify, String userName) {
 
+        // Generar HTML del correo
+        StringBuilder html = new StringBuilder();
+        html.append("<html><body style='font-family: Arial, sans-serif; color:#333;'>");
+
+        html.append("<h2 style='color:#2E86C1;'>Nuevo empleado quiere registrarse - MeseroApp</h2>");
+
+        html.append("<p>Hola,</p>");
+        html.append("<p>El empleado <strong>")
+                .append(userName)
+                .append("</strong> quiere unirse a tu bar en <strong>MeseroApp</strong>.</p>");
+
+        html.append("<p>Para aprobar su registro, introduce el siguiente código de verificación en la aplicación:</p>");
+
+        html.append("<div style='margin: 20px 0; padding: 15px; background:#f0f4ff; border-left: 4px solid #2E86C1; display:inline-block;'>")
+                .append("<h1 style='margin:0; font-size:32px; letter-spacing:4px; color:#2E86C1;'>")
+                .append(tokenVerify)
+                .append("</h1>")
+                .append("</div>");
+
+        html.append("<p>Este es el <strong>token de verificación</strong> generado por MeseroApp.</p>");
+        html.append("<p>Si tú no solicitaste este registro, puedes ignorar este correo.</p>");
+
+        html.append("<br><p>– El equipo de MeseroApp</p>");
+        html.append("</body></html>");
+
+        // Configuración SMTP
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(EMAIL_USERNAME, EMAIL_PASSWORD);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL_USERNAME, "MeseroApp"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+            message.setSubject("Verificación de registro de nuevo empleado - MeseroApp");
+            message.setContent(html.toString(), "text/html; charset=utf-8");
+
+            Transport.send(message);
+
+            System.out.println("Correo de verificación enviado a " + recipient);
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

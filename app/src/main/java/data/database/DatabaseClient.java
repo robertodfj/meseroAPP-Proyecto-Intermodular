@@ -14,7 +14,7 @@ public class DatabaseClient {
                             AppDatabase.class,
                             "bar_app_database"
                     )
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigrationFrom()
                     .build();
         }
         return instance;

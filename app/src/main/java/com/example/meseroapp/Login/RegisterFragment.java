@@ -5,25 +5,26 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.meseroapp.R;
 
-import java.util.Date;
+import java.util.Random;
 
+import data.dao.BarDAO;
 import data.database.AppDatabase;
+import data.entity.Bar;
 import data.entity.User;
+import data.service.EmailSenderService;
 import data.service.UserService;
 
 public class RegisterFragment extends Fragment {
@@ -32,10 +33,12 @@ public class RegisterFragment extends Fragment {
     private Spinner spinnerOpciones;
     private Button btnRegister;
     private TextView tvLogin, tvBossRegister;
-    private UserService userService;
 
-    public RegisterFragment() {
-    }
+    private UserService userService;
+    private BarDAO barDAO;
+    private EmailSenderService emailSenderService;
+
+    public RegisterFragment() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -51,6 +54,7 @@ public class RegisterFragment extends Fragment {
 
         AppDatabase db = AppDatabase.getInstance(requireContext());
         userService = new UserService(db.userDao());
+        barDAO = db.barDao();
 
         etFullName = view.findViewById(R.id.etFullName);
         etEmail = view.findViewById(R.id.etEmail);
@@ -61,58 +65,131 @@ public class RegisterFragment extends Fragment {
         tvLogin = view.findViewById(R.id.tvLogin);
         tvBossRegister = view.findViewById(R.id.tvBossRegister);
 
-
-        // Opciones spinner
+        // Spinner
         String[] opciones = {"camarero", "cocina", "gerente"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, opciones);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_spinner_item, opciones);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerOpciones.setAdapter(adapter);
 
-        tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginFragment loginFragment = new LoginFragment();
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, loginFragment) // frameLayout del Activity
-                        .addToBackStack(null) // permite volver al login con el botón atrás
-                        .commit();
-            }
+        tvLogin.setOnClickListener(v -> {
+            LoginFragment loginFragment = new LoginFragment();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, loginFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
-        tvBossRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BossFragment bossFragment = new BossFragment();
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, bossFragment) // frameLayout del Activity
-                        .addToBackStack(null) // permite volver al login con el botón atrás
-                        .commit();
-            }
+        tvBossRegister.setOnClickListener(v -> {
+            BossFragment bossFragment = new BossFragment();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, bossFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
-        // Registar un usuario en la BD
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String fullName = etFullName.getText().toString().trim();
-                String email = etEmail.getText().toString().trim();
-                String password = etPassword.getText().toString().trim();
-                String role = spinnerOpciones.getSelectedItem().toString();
-                String barText = etBar.getText().toString().trim();
+        // REGISTRO DE USUARIO
+        btnRegister.setOnClickListener(v -> {
 
-                // PRIMER DIALOGO: TOKEN
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle("Aprobación de bar");
-                builder.setMessage("Introduce el token enviado al correo del bar");
+            String fullName = etFullName.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
+            String role = spinnerOpciones.getSelectedItem().toString();
+            String barText = etBar.getText().toString().trim();
 
-                final EditText input = new EditText(requireContext());
-                input.setHint("Token aquí...");
-                builder.setView(input);
-
-                builder.setPositiveButton("Verificar", null);
-                builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
-
+            if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || barText.isEmpty()) {
+                Toast.makeText(requireContext(), "Rellena todos los campos", Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
-    }
+
+            int barId;
+            try {
+                barId = Integer.parseInt(barText);
+            } catch (Exception e) {
+                Toast.makeText(requireContext(), "ID de bar inválido", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            new Thread(() -> {
+
+                Bar bar = barDAO.getById(barId);
+                if (bar == null) {
+                    // Volvemos al UI para mostrar mensaje
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(requireContext(), "No existe un bar con ese ID", Toast.LENGTH_SHORT).show()
+                    );
+                    return; // salimos del hilo secundario
+                }
+
+                String barEmail = bar.getEmail();
+                int token = new Random().nextInt(9000) + 1000;
+
+                // Enviar email también fuera del UI
+                emailSenderService.sendUserVerifyEmail(barEmail, token, fullName);
+
+                // Volvemos a UI para mostrar diálogo
+                requireActivity().runOnUiThread(() -> {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                    builder.setTitle("Aprobación de bar");
+                    builder.setMessage("Introduce el token enviado al correo del bar");
+
+                    final EditText input = new EditText(requireContext());
+                    input.setHint("Token aquí...");
+                    builder.setView(input);
+
+                    builder.setPositiveButton("Verificar", null);
+                    builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
+
+                    AlertDialog dialog = builder.create();
+
+                    dialog.setOnShowListener(d1 -> {
+                        Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        button.setOnClickListener(v1 -> {
+
+                            String tokenIngresado = input.getText().toString().trim();
+
+                            if (tokenIngresado.equals(String.valueOf(token))) {
+                                dialog.dismiss();
+
+                                User user = new User();
+                                user.setName(fullName);
+                                user.setEmail(email);
+                                user.setPassword(password);
+                                user.setRol(role);
+                                user.setBarId(barId);
+
+                                new Thread(() -> {
+                                    boolean success = userService.register(user);
+
+                                    requireActivity().runOnUiThread(() -> {
+
+                                        if (success) {
+                                            LoginFragment loginFragment = new LoginFragment();
+                                            getParentFragmentManager().beginTransaction()
+                                                    .replace(R.id.fragment_container, loginFragment)
+                                                    .addToBackStack(null)
+                                                    .commit();
+                                        } else {
+                                            Toast.makeText(requireContext(),
+                                                    "El email ya está en uso",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    });
+
+                                }).start();
+
+                            } else {
+                                input.setError("Token incorrecto");
+                            }
+                        });
+                    });
+
+                    dialog.show();
+
+                });
+
+            }).start();  // ← HILO SECUNDARIO PRINCIPAL
+        });}
 }
