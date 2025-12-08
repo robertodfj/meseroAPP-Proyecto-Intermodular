@@ -1,5 +1,6 @@
 package com.example.meseroapp.Login;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -93,45 +94,24 @@ public class RegisterFragment extends Fragment {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String fullName = etFullName.getText().toString().trim();
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
                 String role = spinnerOpciones.getSelectedItem().toString();
-                int barID = Integer.parseInt(etBar.getText().toString().trim());
+                String barText = etBar.getText().toString().trim();
 
-                // Crear usuario usando constructor vacío
-                User user = new User();
-                user.setName(fullName);
-                user.setEmail(email);
-                user.setPassword(password);
-                user.setRol(role);
-                user.setBarId(barID);
+                // PRIMER DIALOGO: TOKEN
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle("Aprobación de bar");
+                builder.setMessage("Introduce el token enviado al correo del bar");
 
-                // Ejecutar en hilo secundario
-                new Thread(() -> {
+                final EditText input = new EditText(requireContext());
+                input.setHint("Token aquí...");
+                builder.setView(input);
 
-                    boolean success = userService.register(user);
+                builder.setPositiveButton("Verificar", null);
+                builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
 
-                    // Volver al hilo principal
-                    requireActivity().runOnUiThread(() -> {
-
-                        if (success) {
-                            // Volver al login tras registrarse
-                            LoginFragment loginFragment = new LoginFragment();
-                            getParentFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container, loginFragment)
-                                    .addToBackStack(null)
-                                    .commit();
-                        } else {
-                            Toast.makeText(requireContext(),
-                                    "El email ya está en uso",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                    });
-
-                }).start();
             }
         });
     }

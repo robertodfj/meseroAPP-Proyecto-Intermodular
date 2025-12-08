@@ -22,12 +22,14 @@ import java.util.concurrent.Executors;
 import data.database.AppDatabase;
 import data.entity.Bar;
 import data.service.BarService;
+import data.service.EmailSenderService;
 
 public class BossFragment extends Fragment {
 
     private EditText etEmail, etBarName;
     private Button btnCreate;
     private BarService barService;
+    private EmailSenderService emailSenderService;
 
     public BossFragment() {}
 
@@ -51,12 +53,12 @@ public class BossFragment extends Fragment {
         btnCreate = view.findViewById(R.id.btnCreate);
 
         btnCreate.setOnClickListener(v -> {
-            int token = (int) (Math.random() * 9000) + 1000;
-            // TODO: ENVIAR EMAIL CON TOKEN
-            System.out.println(token);
-
             String email = etEmail.getText().toString().trim();
             String barName = etBarName.getText().toString().trim();
+
+            int token = (int) (Math.random() * 9000) + 1000;
+            emailSenderService.sendBarVerifyEmail(email, token);
+            System.out.println(token);
 
             // EJECUTAR EN HILO SECUNDARIO PARA NO CRASH
             Executors.newSingleThreadExecutor().execute(() -> {
