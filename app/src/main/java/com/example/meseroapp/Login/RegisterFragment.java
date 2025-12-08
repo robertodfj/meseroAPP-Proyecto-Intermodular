@@ -93,6 +93,7 @@ public class RegisterFragment extends Fragment {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String fullName = etFullName.getText().toString().trim();
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
@@ -107,17 +108,30 @@ public class RegisterFragment extends Fragment {
                 user.setRol(role);
                 user.setBarId(barID);
 
-                // Registrar usuario
-                if (userService.register(user)){
-                    // Volver al login
-                    LoginFragment loginFragment = new LoginFragment();
-                    getParentFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, loginFragment)
-                            .addToBackStack(null)
-                            .commit();
-                }else {
-                    Toast.makeText(requireContext(), "El email ya esta en uso", Toast.LENGTH_SHORT).show();
-                }
+                // Ejecutar en hilo secundario
+                new Thread(() -> {
+
+                    boolean success = userService.register(user);
+
+                    // Volver al hilo principal
+                    requireActivity().runOnUiThread(() -> {
+
+                        if (success) {
+                            // Volver al login tras registrarse
+                            LoginFragment loginFragment = new LoginFragment();
+                            getParentFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container, loginFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                        } else {
+                            Toast.makeText(requireContext(),
+                                    "El email ya está en uso",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
+
+                }).start();
             }
         });
     }
