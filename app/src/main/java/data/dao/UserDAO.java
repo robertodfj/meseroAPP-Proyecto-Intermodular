@@ -1,8 +1,11 @@
 package data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import java.util.List;
 
 import data.entity.User;
 
@@ -23,4 +26,13 @@ public interface UserDAO {
 
     @Query("UPDATE User SET name = :nombre WHERE id = :userId")
     void updateNombre(int userId, String nombre);
+
+    @Query("SELECT * FROM User WHERE barId = :barId")
+    LiveData<List<User>> getEmpleados(int barId);
+
+    @Query("SELECT * FROM User WHERE barId = :barId AND rol = 'camarero'")
+    LiveData<List<User>> getCamareros(int barId);
+
+    @Query("SELECT * FROM User WHERE barId = :barId AND rol = 'cocina'")
+    LiveData<List<User>> getCocineros(int barId);
 }
