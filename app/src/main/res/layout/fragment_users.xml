@@ -3,12 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Main.UsersFragment">
+    tools:context=".Main.Boss.UsersFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvEmpleados"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"/>
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvEmpleados"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"/>
+    </LinearLayout>
 
 </FrameLayout>

@@ -1,4 +1,4 @@
-package com.example.meseroapp.Main;
+package com.example.meseroapp.Main.Boss;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.meseroapp.Main.CamareroFragment;
+import com.example.meseroapp.Main.CocinaFragment;
 import com.example.meseroapp.R;
 
 public class BossFragment extends Fragment {

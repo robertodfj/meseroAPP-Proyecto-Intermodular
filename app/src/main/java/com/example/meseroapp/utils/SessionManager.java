@@ -11,8 +11,8 @@ public class SessionManager {
     private static final String KEY_USER_ROLE = "userRole";
 
     private static SessionManager instance;
-    private SharedPreferences prefs;
-    private SharedPreferences.Editor editor;
+    private final SharedPreferences prefs;
+    private final SharedPreferences.Editor editor;
 
     private SessionManager(Context context) {
         prefs = context.getApplicationContext()
@@ -28,7 +28,7 @@ public class SessionManager {
         return instance;
     }
 
-    // Guarda barId, rol y estado logeado
+    // Guarda sesión completa
     public void saveSession(int barId, String role) {
         editor.putInt(KEY_BAR_ID, barId);
         editor.putString(KEY_USER_ROLE, role);
@@ -42,6 +42,12 @@ public class SessionManager {
         editor.apply();
     }
 
+    // Guarda solo el barId
+    public void saveBarId(int barId) {
+        editor.putInt(KEY_BAR_ID, barId);
+        editor.apply();
+    }
+
     // Devuelve el rol
     public String getUserRole() {
         return prefs.getString(KEY_USER_ROLE, "guest");
@@ -52,7 +58,7 @@ public class SessionManager {
         return prefs.getInt(KEY_BAR_ID, -1);
     }
 
-    // Devuelve si está logeado
+    // Estado del login
     public boolean isLogged() {
         return prefs.getBoolean(KEY_IS_LOGGED, false);
     }
