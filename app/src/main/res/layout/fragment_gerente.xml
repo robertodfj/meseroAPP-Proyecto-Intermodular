@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center"
-                    android:text="El pepe"
+                    android:text="El Pepe"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -95,6 +95,7 @@
                                 android:textStyle="bold"/>
 
                             <Button
+                                android:id="@+id/btnVerAlmacen"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ver"
@@ -107,7 +108,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:textSize="18sp"
-                            android:text="Pulsa el botón 'Ver' para consultar el stock actual de productos en el almacén."
+                            android:text="Pulsa el botón «Ver» para consultar el stock actual de productos en el almacén."
                             android:textColor="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -137,11 +138,12 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Almacén"
+                                android:text="Empleados"
                                 android:textSize="30sp"
                                 android:textStyle="bold"/>
 
                             <Button
+                                android:id="@+id/btnVerEmpleados"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ver"
@@ -154,7 +156,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:textSize="18sp"
-                            android:text="Pulsa el botón 'Ver' para consultar el stock actual de productos en el almacén."
+                            android:text="Pulsa el botón «Ver» para consultar los empleados en plantilla."
                             android:textColor="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -184,11 +186,12 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Almacén"
+                                android:text="Cocina"
                                 android:textSize="30sp"
                                 android:textStyle="bold"/>
 
                             <Button
+                                android:id="@+id/btnVerCocina"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ver"
@@ -201,7 +204,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:textSize="18sp"
-                            android:text="Pulsa el botón 'Ver' para consultar el stock actual de productos en el almacén."
+                            android:text="Pulsa el botón «Ver» para consultar el estado de la cocina."
                             android:textColor="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -231,11 +234,12 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Almacén"
+                                android:text="Mesas"
                                 android:textSize="30sp"
                                 android:textStyle="bold"/>
 
                             <Button
+                                android:id="@+id/btnVerMesas"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ver"
@@ -248,7 +252,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:textSize="18sp"
-                            android:text="Pulsa el botón 'Ver' para consultar el stock actual de productos en el almacén."
+                            android:text="Pulsa el botón «Ver» para consultar el estado de las mesas."
                             android:textColor="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
