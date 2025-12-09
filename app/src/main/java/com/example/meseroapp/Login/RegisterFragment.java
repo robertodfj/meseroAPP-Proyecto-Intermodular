@@ -81,9 +81,9 @@ public class RegisterFragment extends Fragment {
         });
 
         tvBossRegister.setOnClickListener(v -> {
-            BossFragment bossFragment = new BossFragment();
+            CreateBarFragment createBarFragment = new CreateBarFragment();
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, bossFragment)
+                    .replace(R.id.fragment_container, createBarFragment)
                     .addToBackStack(null)
                     .commit();
         });

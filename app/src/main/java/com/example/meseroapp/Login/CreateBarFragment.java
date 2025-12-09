@@ -1,7 +1,6 @@
 package com.example.meseroapp.Login;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,20 +23,20 @@ import data.entity.Bar;
 import data.service.BarService;
 import data.service.EmailSenderService;
 
-public class BossFragment extends Fragment {
+public class CreateBarFragment extends Fragment {
 
     private EditText etEmail, etBarName;
     private Button btnCreate;
     private BarService barService;
     private EmailSenderService emailSenderService;
 
-    public BossFragment() {}
+    public CreateBarFragment() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_boss, container, false);
+        return inflater.inflate(R.layout.fragment_create_bar, container, false);
     }
 
     @Override

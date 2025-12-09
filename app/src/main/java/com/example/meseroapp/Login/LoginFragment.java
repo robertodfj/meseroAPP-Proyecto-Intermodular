@@ -64,9 +64,9 @@ public class LoginFragment extends Fragment {
 
         // Listener para ir al registro de jefe
         tvBossRegister.setOnClickListener(v -> {
-            BossFragment bossFragment = new BossFragment();
+            CreateBarFragment createBarFragment = new CreateBarFragment();
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, bossFragment) // frameLayout del Activity
+                    .replace(R.id.fragment_container, createBarFragment) // frameLayout del Activity
                     .addToBackStack(null) // permite volver al login con el botón atrás
                     .commit();
         });

@@ -10,12 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.meseroapp.Login.BossFragment;
 import com.example.meseroapp.R;
 
-public class GerenteFragment extends Fragment {
+public class BossFragment extends Fragment {
 
-    public GerenteFragment() {}
+    public BossFragment() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,9 +37,9 @@ public class GerenteFragment extends Fragment {
         btnVerAlmacen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlmacenFragment almacenFragment = new AlmacenFragment();
+                ProductFragment productFragment = new ProductFragment();
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, almacenFragment) // frameLayout del Activity
+                        .replace(R.id.fragment_container, productFragment) // frameLayout del Activity
                         .addToBackStack(null) // permite volver con el botón atrás
                         .commit();
             }
@@ -50,9 +49,9 @@ public class GerenteFragment extends Fragment {
         btnVerEmpleados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EmpleadosFragment empleadosFragment = new EmpleadosFragment();
+                UsersFragment usersFragment = new UsersFragment();
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, empleadosFragment) // frameLayout del Activity
+                        .replace(R.id.fragment_container, usersFragment) // frameLayout del Activity
                         .addToBackStack(null) // permite volver con el botón atrás
                         .commit();
             }
