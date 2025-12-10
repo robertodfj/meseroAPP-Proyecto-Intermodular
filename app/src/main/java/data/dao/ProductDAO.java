@@ -1,11 +1,15 @@
 package data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import java.util.List;
+
 import data.entity.Product;
+import data.entity.User;
 
 @Dao
 public interface ProductDAO {
@@ -30,4 +34,7 @@ public interface ProductDAO {
 
     @Delete
     void delete(Product product);
+
+    @Query("SELECT * FROM Product WHERE barId = :barId")
+    LiveData<List<User>> getProductsByBarId(int barId);
 }
