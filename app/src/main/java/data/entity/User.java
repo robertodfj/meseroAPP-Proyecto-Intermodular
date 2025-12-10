@@ -1,6 +1,7 @@
 package data.entity;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -18,6 +19,7 @@ public class User {
 
     public User() {}
 
+    @Ignore // Para que room utilice el otro room
     public User(int id, String name, String email, String password, int barId, String rol) {
         this.id = id;
         this.name = name;

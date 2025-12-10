@@ -1,6 +1,7 @@
 package data.entity;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -16,6 +17,7 @@ public class Order {
 
     public Order() {}
 
+    @Ignore // Para que room utilice el otro room
     public Order(int id, int barId, int tableId, double totalPrice, String date, boolean closed) {
         this.id = id;
         this.barId = barId;

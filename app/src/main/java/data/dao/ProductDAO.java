@@ -36,5 +36,5 @@ public interface ProductDAO {
     void delete(Product product);
 
     @Query("SELECT * FROM Product WHERE barId = :barId")
-    LiveData<List<User>> getProductsByBarId(int barId);
+    LiveData<List<Product>> getProductsByBarId(int barId);
 }
