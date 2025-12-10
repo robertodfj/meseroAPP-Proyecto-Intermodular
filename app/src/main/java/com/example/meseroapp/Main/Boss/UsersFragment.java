@@ -130,7 +130,7 @@ public class UsersFragment extends Fragment {
                 // Borrar usuario
                 btnBorrar.setOnClickListener(v -> {
                     new Thread(() -> {
-                        db.userDao().(user);
+                        db.userDao().delete(user);
 
                         requireActivity().runOnUiThread(() -> {
                             Toast.makeText(requireContext(), "Usuario borrado", Toast.LENGTH_SHORT).show();
