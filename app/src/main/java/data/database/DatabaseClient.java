@@ -12,7 +12,7 @@ public class DatabaseClient {
             instance = Room.databaseBuilder(
                             context.getApplicationContext(),
                             AppDatabase.class,
-                            "bar_app_database"
+                            "mesero_database"
                     )
                     .fallbackToDestructiveMigrationFrom()
                     .build();
