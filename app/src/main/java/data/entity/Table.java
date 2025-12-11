@@ -11,7 +11,7 @@ public class Table {
     public int barId;
     public int tableNumber;
     public int space;
-    public String status;
+    public String status = null;
 
     public Table() {}
 
