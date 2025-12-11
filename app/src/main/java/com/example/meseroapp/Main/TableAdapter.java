@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -62,14 +63,14 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTableNumber;
+        ImageView imgStatus;
         Button btnComanda;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvFullname = itemView.findViewById(R.id.tvFullName);
-            tvEmail = itemView.findViewById(R.id.tvEmail);
-            tvRol = itemView.findViewById(R.id.tvRol);
-            btnEditar = itemView.findViewById(R.id.btnEditar);
+            tvTableNumber = itemView.findViewById(R.id.tvTableNumber);
+            imgStatus = itemView.findViewById(R.id.imgStatus);
+            btnComanda = itemView.findViewById(R.id.btnComanda);
         }
     }
 }

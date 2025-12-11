@@ -11,15 +11,17 @@ public class Table {
     public int barId;
     public int tableNumber;
     public int space;
+    public String status;
 
     public Table() {}
 
     @Ignore // Para que room utilice el otro room
-    public Table(int id, int barId, int tableNumber, int space) {
+    public Table(int id, int barId, int tableNumber, int space, String status) {
         this.id = id;
         this.barId = barId;
         this.tableNumber = tableNumber;
         this.space = space;
+        this.status = status;
     }
 
     public int getId() {
@@ -53,4 +55,7 @@ public class Table {
     public void setSpace(int space) {
         this.space = space;
     }
+
+    public String getStatus() {return status;}
+    public void setStatus(String status) {this.status = status;}
 }
