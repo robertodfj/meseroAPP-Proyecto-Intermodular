@@ -46,11 +46,25 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Table table = tables.get(position);
 
-        holder.
+        holder.tvTableNumber.setText(table.getTableNumber());
+        switch (table.getStatus()) {
+            case "disponible":
+                holder.imgStatus.setImageResource(R.drawable.ok);
+                break;
+            case "ocupada":
+                holder.imgStatus.setImageResource(R.drawable.ocupado);
+                break;
+            case "reservada":
+                holder.imgStatus.setImageResource(R.drawable.warning);
+                break;
+            default:
+                holder.imgStatus.setImageResource(R.drawable.ok);
+                break;
+        }
 
-        holder.btnEditar.setOnClickListener(v -> {
+        holder.btnComanda.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onEdit(table);  // Pasa el usuario específico al listener
+                listener.onEdit(table);  // Pasa el table específico al listener
             }
         });
     }
