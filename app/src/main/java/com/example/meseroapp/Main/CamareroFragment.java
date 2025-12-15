@@ -26,8 +26,10 @@ import com.example.meseroapp.utils.SessionManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.dao.OrderDAO;
 import data.database.AppDatabase;
 import data.entity.LineOrder;
+import data.entity.Order;
 import data.entity.Product;
 import data.entity.Table;
 
@@ -58,12 +60,10 @@ public class CamareroFragment extends Fragment {
         int barId = SessionManager.getInstance(getContext()).getBarId();
         AppDatabase db = AppDatabase.getInstance(getContext());
 
-        // Observar mesas
         db.tableDao()
                 .getByBarId(barId)
                 .observe(getViewLifecycleOwner(), adapter::setTables);
 
-        // Observar productos UNA VEZ
         db.productDao()
                 .getProductsByBarId(barId)
                 .observe(getViewLifecycleOwner(), products -> {
@@ -76,12 +76,16 @@ public class CamareroFragment extends Fragment {
             switch (table.getStatus()) {
 
                 case "disponible":
-                    openAddOrderDialog(db, table);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                    builder.setTitle("Mesa: " + table.getTableNumber());
+                    builder.setMessage("¿Quieres abir una nueva orden para la mesa " + table.getTableNumber() + "?");
+                    builder.setPositiveButton("Sí", (dialog, which) -> openAddOrderDialog(db, table));
+                    builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+                    builder.show();
                     break;
 
                 case "ocupada":
-                    AlertDialog.Builder builder2 =
-                            new AlertDialog.Builder(requireContext());
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext());
                     builder2.setTitle("Mesa: " + table.getTableNumber());
 
                     LinearLayout layout2 = new LinearLayout(requireContext());
@@ -104,14 +108,12 @@ public class CamareroFragment extends Fragment {
 
                     AlertDialog dialog2 = builder2.create();
 
-                    // Listener para los botones
                     btnAddOrder.setOnClickListener(v -> openAddOrderDialog(db, table));
 
                     dialog2.show();
                     break;
 
                 case "reservada":
-                    // Por ahora no hacemos nada
                     break;
 
                 default:
@@ -120,9 +122,6 @@ public class CamareroFragment extends Fragment {
         });
     }
 
-    /**
-     * Abre el diálogo de añadir comanda, reutilizable.
-     */
     private void openAddOrderDialog(AppDatabase db, Table table) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Mesa: " + table.getTableNumber());
@@ -149,30 +148,48 @@ public class CamareroFragment extends Fragment {
         layout.addView(etQuantity);
 
         builder.setView(layout);
-
-        builder.setPositiveButton("Guardar", null);
-        builder.setNeutralButton("Añadir más", null);
         builder.setNegativeButton("Volver", (dialog, which) -> dialog.dismiss());
 
         AlertDialog dialog = builder.create();
 
-        dialog.setOnShowListener(d -> {
-            Button btnGuardar = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            Button btnMas = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+        new Thread(() -> {
+            OrderDAO orderDao = db.orderDao();
+            Order order = orderDao.getLastOrderByTable(table.getId());
 
-            btnGuardar.setOnClickListener(v -> saveLineOrder(db, table, spinnerProducts, etQuantity, dialog, true));
-            btnMas.setOnClickListener(v -> saveLineOrder(db, table, spinnerProducts, etQuantity, dialog, false));
-        });
+            if (order == null) {
+                order = new Order();
+                order.setTableId(table.getId());
+                order.setBarId(SessionManager.getInstance(getContext()).getBarId());
+                order.setTotalPrice(0);
+                order.setClosed(false);
 
-        dialog.show();
+                long newOrderId = orderDao.insert(order);
+                order.setId((int) newOrderId);
+            }
+
+            int orderId = order.getId();
+
+            requireActivity().runOnUiThread(() -> {
+                dialog.setOnShowListener(d -> {
+                    Button btnGuardar = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                    Button btnMas = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+
+                    btnGuardar.setOnClickListener(v ->
+                            saveLineOrder(db, table, spinnerProducts, etQuantity, dialog, true, orderId)
+                    );
+
+                    btnMas.setOnClickListener(v ->
+                            saveLineOrder(db, table, spinnerProducts, etQuantity, dialog, false, orderId)
+                    );
+                });
+
+                dialog.show();
+            });
+        }).start();
     }
 
-    /**
-     * Guarda una línea de comanda.
-     * @param closeDialog true -> cierra diálogo | false -> mantiene abierto
-     */
     private void saveLineOrder(AppDatabase db, Table table, Spinner spinnerProducts,
-                               EditText etQuantity, AlertDialog dialog, boolean closeDialog) {
+                               EditText etQuantity, AlertDialog dialog, boolean closeDialog, int orderId) {
 
         if (spinnerProducts.getSelectedItem() == null) {
             Toast.makeText(requireContext(), "No hay productos", Toast.LENGTH_SHORT).show();
@@ -208,6 +225,7 @@ public class CamareroFragment extends Fragment {
 
         LineOrder lineOrder = new LineOrder();
         lineOrder.setProductId(product.getId());
+        lineOrder.setOrderId(orderId);
         lineOrder.setUnits(units);
         lineOrder.setLinePrice(linePrice);
         lineOrder.setTableNumber(table.getTableNumber());

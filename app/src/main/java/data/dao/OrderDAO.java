@@ -40,4 +40,7 @@ public interface OrderDAO {
 
     @Query("SELECT * FROM `Order` WHERE date = :date")
     List<Order> getOrdersByDate(String date);
+
+    @Query("SELECT * FROM `Order` WHERE tableId = :tableId AND closed = 0 ORDER BY id DESC LIMIT 1")
+    Order getLastOrderByTable(int tableId);
 }
