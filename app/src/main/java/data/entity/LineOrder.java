@@ -9,7 +9,6 @@ public class LineOrder {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
-
     public int orderId;
     public int productId;
     public int units;
