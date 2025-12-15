@@ -50,9 +50,7 @@ public class CamareroFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView recycler = view.findViewById(R.id.rvMesas);
-        recycler.setLayoutManager(
-                new GridLayoutManager(getContext(), 2)
-        );
+        recycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         TableAdapter adapter = new TableAdapter();
         recycler.setAdapter(adapter);
@@ -78,84 +76,42 @@ public class CamareroFragment extends Fragment {
             switch (table.getStatus()) {
 
                 case "disponible":
-
-                    AlertDialog.Builder builder =
-                            new AlertDialog.Builder(requireContext());
-                    builder.setTitle("Añadir comanda");
-
-                    LinearLayout layout =
-                            new LinearLayout(requireContext());
-                    layout.setOrientation(LinearLayout.VERTICAL);
-                    layout.setPadding(50, 40, 50, 10);
-
-                    Spinner spinnerProducts =
-                            new Spinner(requireContext());
-                    layout.addView(spinnerProducts);
-
-                    ArrayAdapter<Product> spinnerAdapter =
-                            new ArrayAdapter<>(
-                                    requireContext(),
-                                    android.R.layout.simple_spinner_item,
-                                    new ArrayList<>()
-                            );
-                    spinnerAdapter.setDropDownViewResource(
-                            android.R.layout.simple_spinner_dropdown_item);
-
-                    spinnerProducts.setAdapter(spinnerAdapter);
-                    spinnerAdapter.addAll(cachedProducts);
-
-                    EditText etQuantity =
-                            new EditText(requireContext());
-                    etQuantity.setHint("Cantidad");
-                    etQuantity.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    layout.addView(etQuantity);
-
-                    builder.setView(layout);
-
-                    builder.setPositiveButton("Guardar", null);
-                    builder.setNeutralButton("Añadir más", null);
-                    builder.setNegativeButton("Volver",
-                            (dialog, which) -> dialog.dismiss());
-
-                    AlertDialog dialog = builder.create();
-
-                    dialog.setOnShowListener(d -> {
-
-                        Button btnGuardar =
-                                dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                        Button btnMas =
-                                dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-
-                        btnGuardar.setOnClickListener(v -> {
-                            saveLineOrder(
-                                    db,
-                                    table,
-                                    spinnerProducts,
-                                    etQuantity,
-                                    dialog,
-                                    true
-                            );
-                        });
-
-                        btnMas.setOnClickListener(v -> {
-                            saveLineOrder(
-                                    db,
-                                    table,
-                                    spinnerProducts,
-                                    etQuantity,
-                                    dialog,
-                                    false
-                            );
-                        });
-                    });
-
-                    dialog.show();
+                    openAddOrderDialog(db, table);
                     break;
 
                 case "ocupada":
+                    AlertDialog.Builder builder2 =
+                            new AlertDialog.Builder(requireContext());
+                    builder2.setTitle("Mesa: " + table.getTableNumber());
+
+                    LinearLayout layout2 = new LinearLayout(requireContext());
+                    layout2.setOrientation(LinearLayout.VERTICAL);
+                    layout2.setPadding(50, 40, 50, 10);
+
+                    Button btnViewOrder = new Button(requireContext());
+                    btnViewOrder.setText("Ver comanda");
+                    Button btnSendTicket = new Button(requireContext());
+                    btnSendTicket.setText("Enviar Factura a correo");
+                    Button btnAddOrder = new Button(requireContext());
+                    btnAddOrder.setText("Añadir productos a la orden");
+
+                    layout2.addView(btnViewOrder);
+                    layout2.addView(btnSendTicket);
+                    layout2.addView(btnAddOrder);
+
+                    builder2.setView(layout2);
+                    builder2.setNegativeButton("Volver", (dialog2, which) -> dialog2.dismiss());
+
+                    AlertDialog dialog2 = builder2.create();
+
+                    // Listener para los botones
+                    btnAddOrder.setOnClickListener(v -> openAddOrderDialog(db, table));
+
+                    dialog2.show();
                     break;
 
                 case "reservada":
+                    // Por ahora no hacemos nada
                     break;
 
                 default:
@@ -165,31 +121,67 @@ public class CamareroFragment extends Fragment {
     }
 
     /**
+     * Abre el diálogo de añadir comanda, reutilizable.
+     */
+    private void openAddOrderDialog(AppDatabase db, Table table) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Mesa: " + table.getTableNumber());
+
+        LinearLayout layout = new LinearLayout(requireContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10);
+
+        Spinner spinnerProducts = new Spinner(requireContext());
+        layout.addView(spinnerProducts);
+
+        ArrayAdapter<Product> spinnerAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                new ArrayList<>()
+        );
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerProducts.setAdapter(spinnerAdapter);
+        spinnerAdapter.addAll(cachedProducts);
+
+        EditText etQuantity = new EditText(requireContext());
+        etQuantity.setHint("Cantidad");
+        etQuantity.setInputType(InputType.TYPE_CLASS_NUMBER);
+        layout.addView(etQuantity);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("Guardar", null);
+        builder.setNeutralButton("Añadir más", null);
+        builder.setNegativeButton("Volver", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(d -> {
+            Button btnGuardar = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button btnMas = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+
+            btnGuardar.setOnClickListener(v -> saveLineOrder(db, table, spinnerProducts, etQuantity, dialog, true));
+            btnMas.setOnClickListener(v -> saveLineOrder(db, table, spinnerProducts, etQuantity, dialog, false));
+        });
+
+        dialog.show();
+    }
+
+    /**
      * Guarda una línea de comanda.
      * @param closeDialog true -> cierra diálogo | false -> mantiene abierto
      */
-    private void saveLineOrder(
-            AppDatabase db,
-            Table table,
-            Spinner spinnerProducts,
-            EditText etQuantity,
-            AlertDialog dialog,
-            boolean closeDialog
-    ) {
+    private void saveLineOrder(AppDatabase db, Table table, Spinner spinnerProducts,
+                               EditText etQuantity, AlertDialog dialog, boolean closeDialog) {
 
         if (spinnerProducts.getSelectedItem() == null) {
-            Toast.makeText(requireContext(),
-                    "No hay productos",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "No hay productos", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String quantityStr = etQuantity.getText().toString();
-
         if (quantityStr.isEmpty()) {
-            Toast.makeText(requireContext(),
-                    "Introduce una cantidad",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Introduce una cantidad", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -197,26 +189,18 @@ public class CamareroFragment extends Fragment {
         try {
             units = Integer.parseInt(quantityStr);
         } catch (NumberFormatException e) {
-            Toast.makeText(requireContext(),
-                    "Cantidad inválida",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Cantidad inválida", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (units <= 0) {
-            Toast.makeText(requireContext(),
-                    "Cantidad inválida",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Cantidad inválida", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Product product =
-                (Product) spinnerProducts.getSelectedItem();
-
+        Product product = (Product) spinnerProducts.getSelectedItem();
         if (product.getStock() < units) {
-            Toast.makeText(requireContext(),
-                    "Stock insuficiente",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Stock insuficiente", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -230,25 +214,19 @@ public class CamareroFragment extends Fragment {
         lineOrder.setDone(false);
 
         new Thread(() -> {
-
             db.lineOrderDao().insert(lineOrder);
 
             product.setStock(product.getStock() - units);
             db.productDao().update(product);
 
             requireActivity().runOnUiThread(() -> {
-
-                Toast.makeText(requireContext(),
-                        "Producto añadido",
-                        Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(requireContext(), "Producto añadido", Toast.LENGTH_SHORT).show();
                 if (closeDialog) {
                     dialog.dismiss();
                 } else {
                     etQuantity.setText("");
                 }
             });
-
         }).start();
     }
 }
