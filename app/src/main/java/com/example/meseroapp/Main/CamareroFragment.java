@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +14,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,7 +24,11 @@ import android.widget.Toast;
 import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import data.database.AppDatabase;
+import data.entity.Product;
 import data.entity.Table;
 
 public class CamareroFragment extends Fragment {
@@ -56,7 +62,6 @@ public class CamareroFragment extends Fragment {
         adapter.setOnEditClickListener(new TableAdapter.OnEditClickListener() {
             @Override
             public void onEdit(Table table) {
-                // Manejamos el alert dependiendo del status
                 switch (table.getStatus()) {
                     case "disponible":
                         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -67,8 +72,25 @@ public class CamareroFragment extends Fragment {
                         layout.setPadding(50, 40, 50, 10);
 
                         Spinner spinnerProducts = new Spinner(requireContext());
-                        // Aquí deberías cargar los productos desde la base de datos y configurar el adaptador del spinner
                         layout.addView(spinnerProducts);
+
+                        ArrayAdapter<Product> spinnerAdapter = new ArrayAdapter<>(
+                                requireContext(),
+                                android.R.layout.simple_spinner_item,
+                                new ArrayList<>()
+                        );
+
+                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinnerProducts.setAdapter(spinnerAdapter);
+
+                        // Observar productos
+                        db.productDao()
+                                .getProductsByBarId(barId)
+                                .observe(getViewLifecycleOwner(), products -> {
+                                    spinnerAdapter.clear();
+                                    spinnerAdapter.addAll(products);
+                                    spinnerAdapter.notifyDataSetChanged();
+                                });
 
                         EditText etQuantity = new EditText(requireContext());
                         etQuantity.setHint("Cantidad");
