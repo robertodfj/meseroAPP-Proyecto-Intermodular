@@ -29,6 +29,7 @@ import java.util.List;
 import data.database.AppDatabase;
 import data.entity.LineOrder;
 import data.entity.Product;
+import data.entity.Table;
 
 public class CamareroFragment extends Fragment {
 
@@ -48,11 +49,10 @@ public class CamareroFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        GridLayoutManager layoutManager =
-                new GridLayoutManager(getContext(), 2, RecyclerView.VERTICAL, false);
-
         RecyclerView recycler = view.findViewById(R.id.rvMesas);
-        recycler.setLayoutManager(layoutManager);
+        recycler.setLayoutManager(
+                new GridLayoutManager(getContext(), 2)
+        );
 
         TableAdapter adapter = new TableAdapter();
         recycler.setAdapter(adapter);
@@ -65,7 +65,7 @@ public class CamareroFragment extends Fragment {
                 .getByBarId(barId)
                 .observe(getViewLifecycleOwner(), adapter::setTables);
 
-        // Observar productos UNA SOLA VEZ
+        // Observar productos UNA VEZ
         db.productDao()
                 .getProductsByBarId(barId)
                 .observe(getViewLifecycleOwner(), products -> {
@@ -98,13 +98,11 @@ public class CamareroFragment extends Fragment {
                                     android.R.layout.simple_spinner_item,
                                     new ArrayList<>()
                             );
-
                     spinnerAdapter.setDropDownViewResource(
                             android.R.layout.simple_spinner_dropdown_item);
-                    spinnerProducts.setAdapter(spinnerAdapter);
 
+                    spinnerProducts.setAdapter(spinnerAdapter);
                     spinnerAdapter.addAll(cachedProducts);
-                    spinnerAdapter.notifyDataSetChanged();
 
                     EditText etQuantity =
                             new EditText(requireContext());
@@ -115,9 +113,9 @@ public class CamareroFragment extends Fragment {
                     builder.setView(layout);
 
                     builder.setPositiveButton("Guardar", null);
+                    builder.setNeutralButton("Añadir más", null);
                     builder.setNegativeButton("Volver",
                             (dialog, which) -> dialog.dismiss());
-                    builder.setNeutralButton("Añadir más", null);
 
                     AlertDialog dialog = builder.create();
 
@@ -129,84 +127,25 @@ public class CamareroFragment extends Fragment {
                                 dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
 
                         btnGuardar.setOnClickListener(v -> {
-
-                            if (spinnerProducts.getSelectedItem() == null) {
-                                Toast.makeText(requireContext(),
-                                        "No hay productos",
-                                        Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            String quantityStr =
-                                    etQuantity.getText().toString();
-
-                            if (quantityStr.isEmpty()) {
-                                Toast.makeText(requireContext(),
-                                        "Introduce una cantidad",
-                                        Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            int units;
-                            try {
-                                units = Integer.parseInt(quantityStr);
-                            } catch (NumberFormatException e) {
-                                Toast.makeText(requireContext(),
-                                        "Cantidad inválida",
-                                        Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            if (units <= 0) {
-                                Toast.makeText(requireContext(),
-                                        "Cantidad inválida",
-                                        Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            Product selectedProduct =
-                                    (Product) spinnerProducts.getSelectedItem();
-
-                            if (selectedProduct.getStock() < units) {
-                                Toast.makeText(requireContext(),
-                                        "Stock insuficiente",
-                                        Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            double linePrice =
-                                    selectedProduct.getPrice() * units;
-
-                            LineOrder lineOrder = new LineOrder();
-                            lineOrder.setProductId(selectedProduct.getId());
-                            lineOrder.setUnits(units);
-                            lineOrder.setLinePrice(linePrice);
-                            lineOrder.setTableNumber(table.getTableNumber());
-                            lineOrder.setDone(false);
-
-                            new Thread(() -> {
-
-                                db.lineOrderDao().insert(lineOrder);
-
-                                selectedProduct.setStock(
-                                        selectedProduct.getStock() - units);
-                                db.productDao().update(selectedProduct);
-
-                                requireActivity().runOnUiThread(() -> {
-                                    Toast.makeText(requireContext(),
-                                            "Comanda guardada",
-                                            Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
-                                });
-
-                            }).start();
+                            saveLineOrder(
+                                    db,
+                                    table,
+                                    spinnerProducts,
+                                    etQuantity,
+                                    dialog,
+                                    true
+                            );
                         });
 
                         btnMas.setOnClickListener(v -> {
-                            etQuantity.setText("");
-                            Toast.makeText(requireContext(),
-                                    "Producto añadido",
-                                    Toast.LENGTH_SHORT).show();
+                            saveLineOrder(
+                                    db,
+                                    table,
+                                    spinnerProducts,
+                                    etQuantity,
+                                    dialog,
+                                    false
+                            );
                         });
                     });
 
@@ -223,5 +162,93 @@ public class CamareroFragment extends Fragment {
                     break;
             }
         });
+    }
+
+    /**
+     * Guarda una línea de comanda.
+     * @param closeDialog true -> cierra diálogo | false -> mantiene abierto
+     */
+    private void saveLineOrder(
+            AppDatabase db,
+            Table table,
+            Spinner spinnerProducts,
+            EditText etQuantity,
+            AlertDialog dialog,
+            boolean closeDialog
+    ) {
+
+        if (spinnerProducts.getSelectedItem() == null) {
+            Toast.makeText(requireContext(),
+                    "No hay productos",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String quantityStr = etQuantity.getText().toString();
+
+        if (quantityStr.isEmpty()) {
+            Toast.makeText(requireContext(),
+                    "Introduce una cantidad",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int units;
+        try {
+            units = Integer.parseInt(quantityStr);
+        } catch (NumberFormatException e) {
+            Toast.makeText(requireContext(),
+                    "Cantidad inválida",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (units <= 0) {
+            Toast.makeText(requireContext(),
+                    "Cantidad inválida",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Product product =
+                (Product) spinnerProducts.getSelectedItem();
+
+        if (product.getStock() < units) {
+            Toast.makeText(requireContext(),
+                    "Stock insuficiente",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double linePrice = product.getPrice() * units;
+
+        LineOrder lineOrder = new LineOrder();
+        lineOrder.setProductId(product.getId());
+        lineOrder.setUnits(units);
+        lineOrder.setLinePrice(linePrice);
+        lineOrder.setTableNumber(table.getTableNumber());
+        lineOrder.setDone(false);
+
+        new Thread(() -> {
+
+            db.lineOrderDao().insert(lineOrder);
+
+            product.setStock(product.getStock() - units);
+            db.productDao().update(product);
+
+            requireActivity().runOnUiThread(() -> {
+
+                Toast.makeText(requireContext(),
+                        "Producto añadido",
+                        Toast.LENGTH_SHORT).show();
+
+                if (closeDialog) {
+                    dialog.dismiss();
+                } else {
+                    etQuantity.setText("");
+                }
+            });
+
+        }).start();
     }
 }
