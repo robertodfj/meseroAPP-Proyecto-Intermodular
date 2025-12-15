@@ -22,6 +22,9 @@ public interface OrderDAO {
     @Update
     void update(Order order);
 
+    @Query("UPDATE `Order` SET totalPrice = :id")
+    void updateTotalPrice(int id);
+
     @Query("SELECT * FROM `Order` WHERE id = :id")
     Order getById(int id);
 

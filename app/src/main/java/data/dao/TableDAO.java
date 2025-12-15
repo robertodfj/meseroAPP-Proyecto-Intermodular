@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public interface TableDAO {
 
     @Insert
     void insert(Table table);
+
+    @Update
+    void update(Table table);
 
     @Query("SELECT * FROM `Table` WHERE id = :id")
     Table getById(int id);
