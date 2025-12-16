@@ -20,7 +20,7 @@ import androidx.room.Room;
                 Bar.class,
                 Table.class
         },
-        version = 3,
+        version = 1,
         exportSchema = false
 )
 @TypeConverters({Converters.class})
