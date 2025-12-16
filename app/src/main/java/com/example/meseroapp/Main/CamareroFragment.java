@@ -3,6 +3,7 @@ package com.example.meseroapp.Main;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -235,6 +236,11 @@ public class CamareroFragment extends Fragment {
             return;
         }
 
+        if (units <= 0) {
+            Toast.makeText(getContext(), "Cantidad inválida", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         LineOrder line = new LineOrder();
         line.setOrderId(orderId);
         line.setProductId(product.getId());
@@ -273,6 +279,13 @@ public class CamareroFragment extends Fragment {
         builder.setNegativeButton("Cancelar", null);
         builder.setPositiveButton("Enviar", (d, w) -> {
             String email = etEmail.getText().toString();
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Email inválido", Toast.LENGTH_SHORT).show()
+                );
+                return;
+            }
 
             new Thread(() -> {
                 Order order = db.orderDao().getLastOrderByTable(table.getId());
