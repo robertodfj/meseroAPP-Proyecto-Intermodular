@@ -145,4 +145,46 @@ public class EmailSenderService {
             return false;
         }
     }
+
+    public boolean sendBarVerifyEmail(String email, int token) {
+
+        String subject = "Verificación de nuevo usuario en MeseroApp";
+        StringBuilder html = new StringBuilder();
+        html.append("<html><body style='font-family: Arial, sans-serif;'>");
+        html.append("<h2>Solicitud de registro de usuario</h2>");
+        html.append("<p>Hola,</p>");
+        html.append("<p>¿Estas intentando crear un bar en meseroAPP?</p>");
+        html.append("<p>Su token de verificación es: <strong>").append(token).append("</strong></p>");
+        html.append("<p>Introduce este token en la app para completar el registro del bar.</p>");
+        html.append("<br><p>MeseroApp</p>");
+        html.append("</body></html>");
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(EMAIL_USERNAME, EMAIL_PASSWORD);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL_USERNAME, "MeseroApp"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            message.setSubject(subject);
+            message.setContent(html.toString(), "text/html; charset=utf-8");
+
+            Transport.send(message);
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
