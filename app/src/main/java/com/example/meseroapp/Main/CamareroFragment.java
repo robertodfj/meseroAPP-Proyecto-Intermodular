@@ -244,6 +244,7 @@ public class CamareroFragment extends Fragment {
         LineOrder line = new LineOrder();
         line.setOrderId(orderId);
         line.setProductId(product.getId());
+        line.setBarId(product.barId);
         line.setUnits(units);
         line.setLinePrice(product.getPrice() * units);
         line.setTableNumber(table.getTableNumber());
