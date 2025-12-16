@@ -1,5 +1,6 @@
 package data.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -18,6 +19,9 @@ public interface LineOrderDAO {
 
     @Query("SELECT * FROM LineOrder WHERE orderId = :orderId")
     List<LineOrder> getLinesByOrder(int orderId);
+
+    @Query("SELECT * FROM LineOrder WHERE barId = :barId AND done = 0")
+    LiveData<List<LineOrder>> getPendingLinesByBar(int barId);
     @Transaction
     @Query("SELECT * FROM LineOrder WHERE orderId = :orderId")
     List<LineWithProduct> getLinesWithProducts(int orderId);
