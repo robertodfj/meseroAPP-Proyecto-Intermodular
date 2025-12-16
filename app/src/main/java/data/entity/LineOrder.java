@@ -10,6 +10,7 @@ public class LineOrder {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public int orderId;
+    public int barId;
     public int productId;
     public int units;
     public int tableNumber;
@@ -19,7 +20,7 @@ public class LineOrder {
     public LineOrder() {}
 
     @Ignore // Para que room utilice el otro room
-    public LineOrder(int id, int orderId, int productId, int units, int tableNumber, boolean done, double linePrice) {
+    public LineOrder(int id, int orderId, int barId, int productId, int units, int tableNumber, boolean done, double linePrice) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
@@ -27,6 +28,7 @@ public class LineOrder {
         this.linePrice = linePrice;
         this.tableNumber = tableNumber;
         this.done = done;
+        this.barId = barId;
     }
 
     public int getId() { return id; }
@@ -49,4 +51,7 @@ public class LineOrder {
 
     public double getLinePrice() { return linePrice; }
     public void setLinePrice(double linePrice) { this.linePrice = linePrice; }
+
+    public int getBarId() { return barId; }
+    public void setBarId(int barId) { this.barId = barId; }
 }
