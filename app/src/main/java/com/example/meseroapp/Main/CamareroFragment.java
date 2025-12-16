@@ -75,13 +75,30 @@ public class CamareroFragment extends Fragment {
         adapter.setOnEditClickListener(table -> {
 
             switch (table.getStatus()) {
-
-                case "disponible":
+                case "reservada":
                     new AlertDialog.Builder(requireContext())
                             .setTitle("Mesa: " + table.getTableNumber())
-                            .setMessage("¿Quieres abrir una nueva orden?")
-                            .setPositiveButton("Sí", (d, w) -> openAddOrderDialog(db, table))
-                            .setNegativeButton("No", null)
+                            .setMessage("¿Qué quieres hacer?")
+                            .setPositiveButton("Nueva orden", (d, w) -> openAddOrderDialog(db, table))
+                            .setNegativeButton("Liberar mesa", (d, w) -> {
+                                new Thread(() -> {
+                                    try {
+                                        table.setStatus("disponible");
+                                        db.tableDao().update(table);
+                                        requireActivity().runOnUiThread(() ->
+                                                Toast.makeText(getContext(),
+                                                        "Mesa " + table.getTableNumber() + " liberada",
+                                                        Toast.LENGTH_SHORT).show()
+                                        );
+                                    }catch (Exception e){
+                                        requireActivity().runOnUiThread(() ->
+                                                Toast.makeText(getContext(),
+                                                        "Error al liberar la mesa",
+                                                        Toast.LENGTH_SHORT).show()
+                                        );
+                                    }
+                                }).start();
+                            })
                             .show();
                     break;
 
@@ -119,6 +136,15 @@ public class CamareroFragment extends Fragment {
 
                     dialog.show();
                     break;
+                default:
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Mesa: " + table.getTableNumber())
+                            .setMessage("¿Qué quieres hacer?")
+                            .setPositiveButton("Nueva orden", (d, w) -> openAddOrderDialog(db, table))
+                            .setNegativeButton("Reservar mesa", (d, w) -> reserveTable(db, table))
+                            .show();
+                    break;
+
             }
         });
     }
@@ -166,6 +192,8 @@ public class CamareroFragment extends Fragment {
                 order.setTotalPrice(0);
                 order.setClosed(false);
                 order.setId((int) orderDao.insert(order));
+                table.setStatus("ocupada");
+                db.tableDao().update(table);
             }
 
             int orderId = order.getId();
@@ -270,6 +298,27 @@ public class CamareroFragment extends Fragment {
         });
 
         builder.show();
+    }
+
+    // RESERVAR MESA
+    private void reserveTable(AppDatabase db, Table table) {
+        new Thread(() -> {
+            try {
+                table.setStatus("reservada");
+                db.tableDao().update(table);
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(),
+                                "Mesa " + table.getTableNumber() + " reservada",
+                                Toast.LENGTH_SHORT).show()
+                );
+            }catch (Exception e){
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(),
+                                "Error al reservar la mesa",
+                                Toast.LENGTH_SHORT).show()
+                );
+            }
+        }).start();
     }
 
     private void showOrder(AppDatabase db, Table table) {
