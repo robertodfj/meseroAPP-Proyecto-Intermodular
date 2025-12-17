@@ -14,10 +14,11 @@ import com.example.meseroapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.dao.OrderDAO;
 import data.entity.LineOrder;
 
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
+public class LineOrderAdapter extends RecyclerView.Adapter<LineOrderAdapter.ViewHolder> {
 
     private List<LineOrder> orders = new ArrayList<>();
     private OnEditClickListener listener;
@@ -47,7 +48,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LineOrder lineOrder = orders.get(position);
 
+        holder.tvTitle.setText("Mesa:" + lineOrder.getTableNumber());
 
+        holder.btnCloseOrder.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onEdit(lineOrder);  // Pasa el order específico al listener
+            }
+        });
     }
 
     @Override
@@ -58,12 +65,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTitle;
-        Button btnViewOrder;
+        Button btnCloseOrder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.btnOr);
-            btnViewOrder = itemView.findViewById(R.id.);
+            tvTitle = itemView.findViewById(R.id.tvOrderTitle);
+            btnCloseOrder = itemView.findViewById(R.id.btnCloseOrder);
         }
     }
 }
