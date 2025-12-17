@@ -5,15 +5,15 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/m3_split_button_chevron_avd"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/m3_split_button_chevron_avd"
         android:supportsRtl="true"
         android:theme="@style/Theme.MESEROAPP">
 
         <!-- Esta será la primera que se ejecute -->
         <activity
-            android:name="data.dao.TESTFRAGMENTOS"
+            android:name=".Login.LoginRegisterActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,10 +23,6 @@
 
         <activity
             android:name=".Main.MainActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".Login.LoginRegisterActivity"
             android:exported="false" />
 
     </application>
