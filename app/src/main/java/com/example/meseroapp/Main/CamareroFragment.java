@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import data.dao.OrderDAO;
+import data.dao.TableDAO;
 import data.database.AppDatabase;
 import data.entity.LineOrder;
 import data.entity.Order;
@@ -72,6 +73,8 @@ public class CamareroFragment extends Fragment {
                     cachedProducts.clear();
                     cachedProducts.addAll(products);
                 });
+
+        Button btnAddTable = view.findViewById(R.id.addTable);
 
         adapter.setOnEditClickListener(table -> {
 
@@ -148,6 +151,7 @@ public class CamareroFragment extends Fragment {
 
             }
         });
+        btnAddTable.setOnClickListener(v -> addNewTable(db));
     }
 
     // AÑADIR LINEA A ORDEN
@@ -401,6 +405,68 @@ public class CamareroFragment extends Fragment {
                 }
             }).start();
         });
+
+        builder.show();
+    }
+
+    private void addNewTable(AppDatabase db) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Añadir nueva mesa");
+
+        LinearLayout layout = new LinearLayout(requireContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10);
+
+        EditText etTableNumber = new EditText(requireContext());
+        etTableNumber.setHint("Número de mesa");
+        etTableNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
+        layout.addView(etTableNumber);
+
+        EditText etSpace = new EditText(requireContext());
+        etSpace.setHint("Capacidad");
+        etSpace.setInputType(InputType.TYPE_CLASS_NUMBER);
+        layout.addView(etSpace);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("Añadir", (dialog, which) -> {
+            String tableText = etTableNumber.getText().toString().trim();
+            String spaceText = etSpace.getText().toString().trim();
+
+            if (tableText.isEmpty() || spaceText.isEmpty()) {
+                Toast.makeText(getContext(), "Rellena todos los campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int tableNumber = Integer.parseInt(tableText);
+            int space = Integer.parseInt(spaceText);
+            int barId = SessionManager.getInstance(requireContext()).getBarId();
+
+            new Thread(() -> {
+                Table existingTable = db.tableDao().getByTableNumber(tableNumber, barId);
+
+                if (existingTable != null) {
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(), "Ya existe una mesa con ese número", Toast.LENGTH_SHORT).show()
+                    );
+                    return;
+                }
+
+                Table table = new Table();
+                table.setTableNumber(tableNumber);
+                table.setSpace(space);
+                table.setBarId(barId);
+                table.setStatus("disponible");
+
+                db.tableDao().insert(table);
+
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Mesa añadida", Toast.LENGTH_SHORT).show()
+                );
+            }).start();
+        });
+
+        builder.setNegativeButton("Cancelar", null);
 
         builder.show();
     }
