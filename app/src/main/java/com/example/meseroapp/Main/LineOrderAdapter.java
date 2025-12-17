@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import data.dao.OrderDAO;
+import data.dao.ProductDAO;
+import data.database.AppDatabase;
 import data.entity.LineOrder;
+import data.entity.Product;
 
 
 public class LineOrderAdapter extends RecyclerView.Adapter<LineOrderAdapter.ViewHolder> {
@@ -48,7 +51,19 @@ public class LineOrderAdapter extends RecyclerView.Adapter<LineOrderAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LineOrder lineOrder = orders.get(position);
 
+        ProductDAO productDao = AppDatabase.getInstance(holder.itemView.getContext()).productDao();
+
+        // Hilo para consultar el nombre del producto
+        new Thread(() -> {
+            Product product = productDao.getById(lineOrder.getProductId());
+            String productName = (product != null) ? product.getProductName() : "Producto desconocido";
+
+            // Actualizar el TextView en el hilo principal
+            holder.itemView.post(() -> holder.tvProduct.setText(productName));
+        }).start();
+
         holder.tvTitle.setText("Mesa:" + lineOrder.getTableNumber());
+        holder.tvQuantity.setText("Cantidad: " + lineOrder.getUnits());
 
         holder.btnCloseOrder.setOnClickListener(v -> {
             if (listener != null) {
@@ -63,13 +78,14 @@ public class LineOrderAdapter extends RecyclerView.Adapter<LineOrderAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tvTitle;
+        TextView tvTitle, tvProduct, tvQuantity;
         Button btnCloseOrder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvOrderTitle);
+            tvProduct = itemView.findViewById(R.id.tvProductName);
+            tvQuantity = itemView.findViewById(R.id.tvProductUnits);
             btnCloseOrder = itemView.findViewById(R.id.btnCloseOrder);
         }
     }
