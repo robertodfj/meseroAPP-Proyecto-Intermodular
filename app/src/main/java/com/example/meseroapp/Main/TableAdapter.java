@@ -46,7 +46,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Table table = tables.get(position);
 
-        holder.tvTableNumber.setText(table.getTableNumber());
+        holder.tvTableNumber.setText(String.valueOf(table.getTableNumber()));
         switch (table.getStatus()) {
             case "disponible":
                 holder.imgStatus.setImageResource(R.drawable.ok);

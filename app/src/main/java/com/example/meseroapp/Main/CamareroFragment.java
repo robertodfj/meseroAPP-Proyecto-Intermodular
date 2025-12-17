@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +75,7 @@ public class CamareroFragment extends Fragment {
                     cachedProducts.addAll(products);
                 });
 
-        Button btnAddTable = view.findViewById(R.id.addTable);
+        FloatingActionButton btnAddTable = view.findViewById(R.id.addTable);
 
         adapter.setOnEditClickListener(table -> {
 
