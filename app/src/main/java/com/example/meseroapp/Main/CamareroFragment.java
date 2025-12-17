@@ -196,9 +196,11 @@ public class CamareroFragment extends Fragment {
                 order.setBarId(SessionManager.getInstance(getContext()).getBarId());
                 order.setTotalPrice(0);
                 order.setClosed(false);
-                order.setId((int) orderDao.insert(order));
                 table.setStatus("ocupada");
                 db.tableDao().update(table);
+
+                long newId = db.orderDao().insert(order);
+                order.setId((int)newId);
             }
 
             int orderId = order.getId();
