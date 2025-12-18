@@ -20,8 +20,11 @@ public interface LineOrderDAO {
     @Query("SELECT * FROM LineOrder WHERE orderId = :orderId")
     List<LineOrder> getLinesByOrder(int orderId);
 
-    @Query("SELECT * FROM LineOrder WHERE barId = :barId AND done = 0")
+    @Query("SELECT * FROM LineOrder WHERE barId = :barId AND cocinaDone = 0")
     LiveData<List<LineOrder>> getPendingLinesByBar(int barId);
+
+    @Query("SELECT * FROM LineOrder WHERE barId = :barId AND camareroDone = 0")
+    LiveData<List<LineOrder>> getPendingLinesByCamarero(int barId);
     @Transaction
     @Query("SELECT * FROM LineOrder WHERE orderId = :orderId")
     List<LineWithProduct> getLinesWithProducts(int orderId);

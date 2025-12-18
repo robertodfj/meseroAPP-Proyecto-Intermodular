@@ -14,20 +14,23 @@ public class LineOrder {
     public int productId;
     public int units;
     public int tableNumber;
-    public boolean done = false;
+    public boolean cocinaDone = false;
+    public boolean camareroDone;
     public double linePrice; // price * units
 
     public LineOrder() {}
 
-    @Ignore // Para que room utilice el otro room
-    public LineOrder(int id, int orderId, int barId, int productId, int units, int tableNumber, boolean done, double linePrice) {
+    @Ignore // Para que room utilice el otro
+    public LineOrder(int id, int orderId, int barId, int productId, int units, int tableNumber,
+                     boolean cocinaDone, boolean camareroDone, double linePrice) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
         this.units = units;
         this.linePrice = linePrice;
         this.tableNumber = tableNumber;
-        this.done = done;
+        this.camareroDone = camareroDone;
+        this.cocinaDone = cocinaDone;
         this.barId = barId;
     }
 
@@ -46,8 +49,11 @@ public class LineOrder {
     public int getTableNumber() { return tableNumber; }
     public void setTableNumber(int tableNumber) { this.tableNumber = tableNumber; }
 
-    public boolean getDone() { return done; }
-    public void setDone(boolean done) { this.done = done; }
+    public boolean getCocinaDone() { return cocinaDone; }
+    public void setCocinaDone(boolean cocinaDone) { this.cocinaDone = cocinaDone; }
+
+    public boolean getCamareroDone() { return camareroDone; }
+    public void setCamareroDone(boolean camareroDone) { this.camareroDone = camareroDone; }
 
     public double getLinePrice() { return linePrice; }
     public void setLinePrice(double linePrice) { this.linePrice = linePrice; }

@@ -255,7 +255,8 @@ public class CamareroFragment extends Fragment {
         line.setUnits(units);
         line.setLinePrice(product.getPrice() * units);
         line.setTableNumber(table.getTableNumber());
-        line.setDone(false);
+        line.setCocinaDone(false);
+        line.setCamareroDone(true);
 
         new Thread(() -> {
             db.lineOrderDao().insert(line);
