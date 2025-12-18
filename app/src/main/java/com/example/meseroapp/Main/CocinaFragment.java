@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.meseroapp.R;
+import com.example.meseroapp.utils.SessionManager;
+
+import data.database.AppDatabase;
 
 public class CocinaFragment extends Fragment {
 
@@ -37,6 +40,11 @@ public class CocinaFragment extends Fragment {
         LineOrderAdapter lineOrderAdapter = new LineOrderAdapter();
         recicler.setAdapter(lineOrderAdapter);
 
+        int barId = SessionManager.getInstance(getContext()).getBarId();
+        AppDatabase db = AppDatabase.getInstance(getContext());
 
+        db.lineOrderDao()
+                .getPendingLinesByBar(barId)
+                .observe(getViewLifecycleOwner(), lineOrderAdapter::setOrder);
     }
 }
