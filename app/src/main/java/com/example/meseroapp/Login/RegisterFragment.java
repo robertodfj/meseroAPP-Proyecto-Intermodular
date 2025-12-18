@@ -1,6 +1,8 @@
 package com.example.meseroapp.Login;
 
 import android.app.AlertDialog;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,6 +16,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.meseroapp.R;
@@ -90,6 +94,15 @@ public class RegisterFragment extends Fragment {
 
         // REGISTRO DE USUARIO
         btnRegister.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.POST_NOTIFICATIONS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(requireActivity(),
+                            new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                            1001);
+                    return; // salir hasta que el usuario acepte
+                }
+            }
 
             String fullName = etFullName.getText().toString().trim();
             String email = etEmail.getText().toString().trim();
