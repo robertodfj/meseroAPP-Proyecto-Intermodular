@@ -1,5 +1,6 @@
 package com.example.meseroapp.Main;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
 
 import data.database.AppDatabase;
+import data.entity.LineOrder;
 
 public class CocinaFragment extends Fragment {
 
@@ -46,5 +48,22 @@ public class CocinaFragment extends Fragment {
         db.lineOrderDao()
                 .getPendingLinesByBar(barId)
                 .observe(getViewLifecycleOwner(), lineOrderAdapter::setOrder);
+
+        lineOrderAdapter.setOnEditClickListener(lineOrder -> markLineAsDone(lineOrder) );
+    }
+
+    private void markLineAsDone(LineOrder lineOrder) {
+        AppDatabase db = AppDatabase.getInstance(getContext());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Marcar como listo");
+        builder.setMessage("¿Estás seguro de que deseas marcar este pedido como listo?");
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            lineOrder.setCocinaDone(true);
+            lineOrder.setCamareroDone(false);
+            new Thread(() -> db.lineOrderDao().update(lineOrder)).start();
+        });
+        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+        builder.show();
     }
 }
