@@ -42,10 +42,10 @@ public interface UserDAO {
     LiveData<List<User>> getEmpleados(int barId);
 
     @Query(("SELECT * FROM User WHERE isActive = 1 AND barId = :barId AND rol = 'camarero'"))
-    LiveData<List<User>> getActiveCamarero(int barId);
+    List<User> getActiveCamarero(int barId);
 
     @Query(("SELECT * FROM User WHERE isActive = 1 AND barId = :barId AND rol = 'cocina'"))
-    LiveData<List<User>> getActiveCocinero(int barId);
+    List<User> getActiveCocinero(int barId);
 
     @Query("SELECT * FROM User WHERE barId = :barId AND rol = 'camarero'")
     LiveData<List<User>> getCamareros(int barId);
