@@ -74,7 +74,7 @@ public class PendingOrderCamarero extends Fragment {
                 });
 
         FloatingActionButton fabNotifyKitchen = view.findViewById(R.id.fabNotifyKitchenCamarero);
-        fabNotifyKitchen.setOnClickListener(v -> );
+        fabNotifyKitchen.setOnClickListener(v -> notifyKitchen());
     }
 
     private void markLineAsDone(LineOrder lineOrder) {
@@ -97,10 +97,41 @@ public class PendingOrderCamarero extends Fragment {
 
     private void notifyKitchen() {
         SessionManager sessionManager = SessionManager.getInstance(getContext());
-        int userId = sessionManager.();
+        int userId = sessionManager.getUserId();
 
+        if (userId == -1) {
+            Toast.makeText(getContext(), "No hay usuario logeado", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        Toast.makeText(getContext(), "Estas activo, ya te llegan las notificaciones", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getContext(), "Estas inactivo, ya no te llegan las notificaciones", Toast.LENGTH_SHORT).show();
+        AppDatabase db = AppDatabase.getInstance(getContext());
+
+        new Thread(() -> {
+            User user = db.userDao().getById(userId);
+
+            if (user == null) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Usuario no encontrado", Toast.LENGTH_SHORT).show()
+                );
+                return;
+            }
+
+            boolean nuevoEstado = !user.isActive();
+            user.setActive(nuevoEstado);
+            db.userDao().update(user);
+
+            requireActivity().runOnUiThread(() -> {
+                if (nuevoEstado) {
+                    Toast.makeText(getContext(),
+                            "Estás activo, ya te llegan las notificaciones",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(),
+                            "Estás inactivo, ya no te llegan las notificaciones",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }).start();
     }
 }
