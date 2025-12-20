@@ -14,7 +14,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvOrderTitle"
+            android:id="@+id/tvPendingOrderTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -23,7 +23,7 @@
             android:textStyle="bold"
             android:layout_gravity="center"/>
         <TextView
-            android:id="@+id/tvProductName"
+            android:id="@+id/tvPendingProductName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -31,14 +31,14 @@
             android:textSize="30sp"
             android:textStyle="bold"/>
         <TextView
-            android:id="@+id/tvProductUnits"
+            android:id="@+id/tvPendingProductUnits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cantidad: 2"
             android:textSize="30sp"
             android:textStyle="bold"/>
         <Button
-            android:id="@+id/btnCloseOrder"
+            android:id="@+id/btnPendingCloseOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Comanda Completada"
