@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -72,6 +73,8 @@ public class PendingOrderCamarero extends Fragment {
                     }
                 });
 
+        FloatingActionButton fabNotifyKitchen = view.findViewById(R.id.fabNotifyKitchenCamarero);
+        fabNotifyKitchen.setOnClickListener(v -> );
     }
 
     private void markLineAsDone(LineOrder lineOrder) {
@@ -90,5 +93,14 @@ public class PendingOrderCamarero extends Fragment {
         });
         builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         builder.show();
+    }
+
+    private void notifyKitchen() {
+        SessionManager sessionManager = SessionManager.getInstance(getContext());
+        int userId = sessionManager.();
+
+
+        Toast.makeText(getContext(), "Estas activo, ya te llegan las notificaciones", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Estas inactivo, ya no te llegan las notificaciones", Toast.LENGTH_SHORT).show();
     }
 }

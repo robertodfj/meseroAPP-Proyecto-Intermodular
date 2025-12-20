@@ -7,6 +7,7 @@ public class SessionManager {
 
     private static final String PREF_NAME = "MeseroAppPrefs";
     private static final String KEY_BAR_ID = "barId";
+    private static final String KEY_USER_ID = "userId";
     private static final String KEY_IS_LOGGED = "isLogged";
     private static final String KEY_USER_ROLE = "userRole";
 
@@ -29,11 +30,17 @@ public class SessionManager {
     }
 
     // Guarda sesión completa
-    public void saveSession(int barId, String role) {
+    public void saveSession(int userId, int barId, String role) {
+        editor.putInt(KEY_USER_ID, userId);
         editor.putInt(KEY_BAR_ID, barId);
         editor.putString(KEY_USER_ROLE, role);
         editor.putBoolean(KEY_IS_LOGGED, true);
         editor.apply();
+    }
+
+    // Get usuario logeado
+    public int getUserId() {
+        return prefs.getInt(KEY_USER_ID, -1);
     }
 
     // Guarda solo el rol
