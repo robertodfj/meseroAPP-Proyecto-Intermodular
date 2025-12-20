@@ -52,4 +52,7 @@ public interface UserDAO {
 
     @Query("SELECT * FROM User WHERE barId = :barId AND rol = 'cocina'")
     LiveData<List<User>> getCocineros(int barId);
+
+    @Query("SELECT * FROM User WHERE isActive = 1 AND barId = :barId")
+    LiveData<List<User>> getActiveUsers(int barId);
 }

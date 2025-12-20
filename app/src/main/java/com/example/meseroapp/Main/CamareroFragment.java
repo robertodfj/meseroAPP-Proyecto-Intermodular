@@ -1,5 +1,7 @@
 package com.example.meseroapp.Main;
 
+import static android.text.TextUtils.replace;
+
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.InputType;
@@ -21,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meseroapp.Login.LoginFragment;
 import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -76,6 +79,7 @@ public class CamareroFragment extends Fragment {
                 });
 
         FloatingActionButton btnAddTable = view.findViewById(R.id.addTable);
+        FloatingActionButton btnViewPendingOrders = view.findViewById(R.id.viewOrders);
 
         adapter.setOnEditClickListener(table -> {
 
@@ -153,6 +157,7 @@ public class CamareroFragment extends Fragment {
             }
         });
         btnAddTable.setOnClickListener(v -> addNewTable(db));
+        btnViewPendingOrders.setOnClickListener(v -> viewPendingOrders());
     }
 
     // AÑADIR LINEA A ORDEN
@@ -473,5 +478,15 @@ public class CamareroFragment extends Fragment {
         builder.setNegativeButton("Cancelar", null);
 
         builder.show();
+    }
+
+    private void viewPendingOrders() {
+        PendingOrderCamarero pendingOrderCamarero = new PendingOrderCamarero();
+
+        getParentFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, pendingOrderCamarero)
+                .addToBackStack(null)
+                .commit();
     }
 }
