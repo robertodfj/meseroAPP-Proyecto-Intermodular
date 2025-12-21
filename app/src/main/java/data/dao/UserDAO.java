@@ -60,4 +60,3 @@ public interface UserDAO {
             "AND (:isActive IS NULL OR isActive = :isActive)")
     LiveData<List<User>> getEmpleadosFiltrados(int barId, String rol, Boolean isActive);
 }
-}
