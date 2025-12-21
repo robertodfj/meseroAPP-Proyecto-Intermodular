@@ -2,7 +2,9 @@ package com.example.meseroapp.Main.Boss;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +61,20 @@ public class UsersFragment extends Fragment {
         // Botón Filtrar
         Button btnFiltrar = view.findViewById(R.id.btnFiltrar);
         btnFiltrar.setOnClickListener(v -> mostrarDialogoFiltrado());
+
+        EditText etBuscar = view.findViewById(R.id.etBuscarEmpleado);
+        etBuscar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
 
         // Listener para editar usuario
         adapter.setOnEditClickListener(this::mostrarDialogoEdicion);
