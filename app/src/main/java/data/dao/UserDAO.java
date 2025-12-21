@@ -55,4 +55,9 @@ public interface UserDAO {
 
     @Query("SELECT * FROM User WHERE isActive = 1 AND barId = :barId")
     LiveData<List<User>> getActiveUsers(int barId);
+
+    @Query("SELECT * FROM User " + "WHERE barId = :barId AND (:rol IS NULL OR rol = :rol) " +
+            "AND (:isActive IS NULL OR isActive = :isActive)")
+    LiveData<List<User>> getEmpleadosFiltrados(int barId, String rol, Boolean isActive);
+}
 }
