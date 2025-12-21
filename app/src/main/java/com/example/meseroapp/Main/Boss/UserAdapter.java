@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +18,7 @@ import com.example.meseroapp.R;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private List<User> users = new ArrayList<>();
+    private List<User> usersFull = new ArrayList<>(); // copia completa para filtrado
     private OnEditClickListener listener;
 
     public interface OnEditClickListener {
@@ -30,7 +30,26 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     public void setUsers(List<User> newUsers) {
-        this.users = newUsers;
+        this.users = new ArrayList<>(newUsers);
+        this.usersFull = new ArrayList<>(newUsers); // guardamos copia completa
+        notifyDataSetChanged();
+    }
+
+    public void filter(String text) {
+        List<User> filteredList = new ArrayList<>();
+        if (text == null || text.isEmpty()) {
+            filteredList.addAll(usersFull);
+        } else {
+            String query = text.toLowerCase();
+            for (User u : usersFull) {
+                if (u.getName().toLowerCase().contains(query) ||
+                        u.getEmail().toLowerCase().contains(query)) {
+                    filteredList.add(u);
+                }
+            }
+        }
+        users.clear();
+        users.addAll(filteredList);
         notifyDataSetChanged();
     }
 
@@ -52,7 +71,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         holder.btnEditar.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onEdit(user);  // Pasa el usuario específico al listener
+                listener.onEdit(user);
             }
         });
     }
@@ -63,7 +82,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView tvFullname, tvEmail, tvRol;
         Button btnEditar;
 
