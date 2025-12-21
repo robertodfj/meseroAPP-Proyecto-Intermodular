@@ -15,5 +15,14 @@
             android:layout_height="match_parent"
             android:padding="8dp"/>
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/isActiveCocinero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Activar notificaciones de ordenes"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/m3_split_button_chevron_avd"/>
 
 </FrameLayout>
