@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.meseroapp.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.concurrent.Executors;
 
@@ -25,8 +27,8 @@ import data.service.EmailSenderService;
 
 public class CreateBarFragment extends Fragment {
 
-    private EditText etEmail, etBarName;
-    private Button btnCreate;
+    private TextInputEditText etEmail, etBarName;
+    private MaterialButton btnCreate;
     private BarService barService;
     private EmailSenderService emailSenderService;
 
