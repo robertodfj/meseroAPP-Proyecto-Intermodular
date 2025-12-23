@@ -73,7 +73,7 @@ public class RegisterFragment extends Fragment {
         String[] opciones = {"camarero", "cocina", "gerente"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_spinner_item, opciones);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.open_spinner);
         spinnerOpciones.setAdapter(adapter);
 
         tvLogin.setOnClickListener(v -> {
