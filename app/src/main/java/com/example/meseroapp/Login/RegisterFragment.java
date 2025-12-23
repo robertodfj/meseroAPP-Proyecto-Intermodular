@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.meseroapp.R;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.util.Random;
 
@@ -34,7 +35,7 @@ import data.service.UserService;
 public class RegisterFragment extends Fragment {
 
     private EditText etFullName, etEmail, etPassword, etBar;
-    private Spinner spinnerOpciones;
+    private MaterialAutoCompleteTextView spinnerOpciones;
     private Button btnRegister;
     private TextView tvLogin, tvBossRegister;
 
@@ -107,7 +108,7 @@ public class RegisterFragment extends Fragment {
             String fullName = etFullName.getText().toString().trim();
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
-            String role = spinnerOpciones.getSelectedItem().toString();
+            String role = spinnerOpciones.getText().toString();
             String barText = etBar.getText().toString().trim();
 
             if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || barText.isEmpty()) {

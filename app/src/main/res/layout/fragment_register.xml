@@ -63,12 +63,21 @@
                 android:backgroundTint="?attr/colorOnSurface"/>
 
             <!-- Spinner rol -->
-            <Spinner
-                android:id="@+id/spinnerOpciones"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:hint="Rol"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/spinnerOpciones"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:padding="12dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Contraseña -->
             <EditText
