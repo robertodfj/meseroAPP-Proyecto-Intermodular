@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.meseroapp.R;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Random;
 
@@ -34,8 +36,9 @@ import data.service.UserService;
 
 public class RegisterFragment extends Fragment {
 
-    private EditText etFullName, etEmail, etPassword, etBar;
+    private TextInputEditText etFullName, etEmail, etPassword, etBar;
     private MaterialAutoCompleteTextView spinnerOpciones;
+    private TextInputLayout spinnerLayout;
     private Button btnRegister;
     private TextView tvLogin, tvBossRegister;
 
