@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Cabecera fija -->
+        <!-- Cabecera -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,8 +35,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:text="Panel de Gerente"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:textSize="45sp"
                     android:textColor="@color/darkgrey"
                     android:textStyle="bold"/>
@@ -52,7 +53,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Scrollable feed -->
+        <!-- Contenido -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -65,7 +66,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Card: Ver Stock del Almacén -->
+                <!-- ALMACÉN -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,8 +84,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
@@ -94,26 +95,26 @@
                                 android:textSize="30sp"
                                 android:textStyle="bold"/>
 
-                            <Button
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnVerAlmacen"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ver"
-                                android:padding="10dp"
-                                android:layout_gravity="center_vertical"/>
+                                app:cornerRadius="12dp"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
                         </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:textSize="18sp"
                             android:text="Pulsa el botón «Ver» para consultar el stock actual de productos en el almacén."
+                            android:textSize="18sp"
                             android:textColor="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Card: Ver Empleados -->
+                <!-- EMPLEADOS -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -131,8 +132,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
@@ -142,26 +143,26 @@
                                 android:textSize="30sp"
                                 android:textStyle="bold"/>
 
-                            <Button
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnVerEmpleados"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ver"
-                                android:padding="10dp"
-                                android:layout_gravity="center_vertical"/>
+                                app:cornerRadius="12dp"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
                         </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:textSize="18sp"
                             android:text="Pulsa el botón «Ver» para consultar los empleados en plantilla."
+                            android:textSize="18sp"
                             android:textColor="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Card: Ver Cocina -->
+                <!-- COCINA -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -179,8 +180,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
@@ -190,26 +191,26 @@
                                 android:textSize="30sp"
                                 android:textStyle="bold"/>
 
-                            <Button
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnVerCocina"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ver"
-                                android:padding="10dp"
-                                android:layout_gravity="center_vertical"/>
+                                app:cornerRadius="12dp"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
                         </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:textSize="18sp"
                             android:text="Pulsa el botón «Ver» para consultar el estado de la cocina."
+                            android:textSize="18sp"
                             android:textColor="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Card: Ver Mesas -->
+                <!-- MESAS -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -227,8 +228,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
@@ -238,21 +239,21 @@
                                 android:textSize="30sp"
                                 android:textStyle="bold"/>
 
-                            <Button
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnVerMesas"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ver"
-                                android:padding="10dp"
-                                android:layout_gravity="center_vertical"/>
+                                app:cornerRadius="12dp"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
                         </LinearLayout>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:textSize="18sp"
                             android:text="Pulsa el botón «Ver» para consultar el estado de las mesas."
+                            android:textSize="18sp"
                             android:textColor="@color/black"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
