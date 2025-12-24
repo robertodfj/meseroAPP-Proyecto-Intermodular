@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardMesa"
     android:layout_width="160dp"
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
     app:cardCornerRadius="16dp"
     android:elevation="6dp"
-    android:id="@+id/cardMesa">
+    app:cardBackgroundColor="#CCFFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/tvTableNumber"
@@ -30,14 +32,17 @@
             android:layout_height="120dp"
             android:src="@drawable/ocupado"
             android:contentDescription="Imagen de mesa"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="12dp"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnComanda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Comanda"
-            android:padding="8dp" />
-
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/green"
+            app:cornerRadius="12dp"
+            style="@style/Widget.MaterialComponents.Button"
+            android:padding="8dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

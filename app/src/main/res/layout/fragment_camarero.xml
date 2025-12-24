@@ -6,41 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".Main.CamareroFragment">
 
-    <LinearLayout
+    <!-- Lista de mesas -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMesas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvMesas"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"/>
-    </LinearLayout>
-
-
+    <!-- Contenedor FAB vertical -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/viewOrders"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:contentDescription="Ver comandas"
-            app:srcCompat="@android:drawable/ic_dialog_dialer"/>
+            android:text="Comandas"
+            android:layout_marginBottom="12dp"
+            app:icon="@android:drawable/ic_menu_view"
+            app:iconPadding="8dp" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/addTable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Añadir mesa"
-            app:srcCompat="@android:drawable/ic_input_add"/>
+            android:text="Añadir mesa"
+            app:icon="@android:drawable/ic_input_add"
+            app:iconPadding="8dp" />
 
     </LinearLayout>
 
