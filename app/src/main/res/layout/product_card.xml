@@ -34,8 +34,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Editar"
-                android:icon="@drawable/ic_edit"
-                android:iconPadding="6dp"
                 app:cornerRadius="12dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
         </LinearLayout>
