@@ -20,7 +20,7 @@ import androidx.room.Room;
                 Bar.class,
                 Table.class
         },
-        version = 1,
+        version = 2,
         exportSchema = false
 )
 @TypeConverters({Converters.class})
@@ -38,9 +38,13 @@ public abstract class AppDatabase extends RoomDatabase {
     // Singleton para obtener la instancia de la base de datos
     public static synchronized AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "mesero_database")
-                            .build();
+            INSTANCE = Room.databaseBuilder(
+                            context.getApplicationContext(),
+                            AppDatabase.class,
+                            "mesero_database"
+                    )
+                    .fallbackToDestructiveMigration()
+                    .build();
         }
         return INSTANCE;
     }
