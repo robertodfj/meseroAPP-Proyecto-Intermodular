@@ -26,6 +26,7 @@ public class EmailSenderService {
     private final LineOrderDAO lineDao;
     private final BarDAO barDAO;
 
+    // Credenciales de correo
     private static final String EMAIL_USERNAME = "meseroapp@gmail.com";
     private static final String EMAIL_PASSWORD = "********";
 
@@ -41,8 +42,41 @@ public class EmailSenderService {
         this.barDAO = barDAO;
     }
 
-    public boolean sendOrderTicket(int orderId, String recipient) {
+    private Session createMailSession() {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
+        return Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(EMAIL_USERNAME, EMAIL_PASSWORD);
+            }
+        });
+    }
+
+    private boolean sendHtmlEmail(String to, String subject, String htmlContent) {
+        try {
+            Session session = createMailSession();
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL_USERNAME, "MeseroApp"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
+            message.setContent(htmlContent, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean sendOrderTicket(int orderId, String recipient) {
         Order order = orderDao.getById(orderId);
         if (order == null) return false;
 
@@ -57,7 +91,6 @@ public class EmailSenderService {
 
         for (LineOrder line : lines) {
             Product product = productDao.getById(line.getProductId());
-
             html.append("<tr>")
                     .append("<td>").append(product.getProductName()).append("</td>")
                     .append("<td>").append(line.getUnits()).append("</td>")
@@ -69,123 +102,48 @@ public class EmailSenderService {
         html.append("<tr>")
                 .append("<td colspan='3'><strong>Total</strong></td>")
                 .append("<td><strong>").append(order.getTotalPrice()).append("€</strong></td>")
-                .append("</tr>");
+                .append("</tr>")
+                .append("</table>")
+                .append("<p>Gracias por tu visita</p>")
+                .append("</body></html>");
 
-        html.append("</table>");
-        html.append("<p>Gracias por tu visita</p>");
-        html.append("</body></html>");
-
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        Session session = Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(EMAIL_USERNAME, EMAIL_PASSWORD);
-            }
-        });
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(EMAIL_USERNAME, "MeseroApp"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
-            message.setSubject("Factura - " + barName);
-            message.setContent(html.toString(), "text/html; charset=utf-8");
-
-            Transport.send(message);
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return sendHtmlEmail(
+                recipient,
+                "Factura - " + barName,
+                html.toString()
+        );
     }
 
     public boolean sendUserVerifyEmail(String barEmail, int token, String fullName, String role) {
-
         String subject = "Verificación de nuevo usuario en MeseroApp";
-        StringBuilder html = new StringBuilder();
-        html.append("<html><body style='font-family: Arial, sans-serif;'>");
-        html.append("<h2>Solicitud de registro de usuario</h2>");
-        html.append("<p>Hola,</p>");
-        html.append("<p>El usuario <strong>").append(fullName).append("</strong> quiere registrarse en tu bar.</p>");
-        html.append("<p>Su rol seleccionado es <strong>").append(role).append("</strong> en tu bar.</p>");
-        html.append("<p>Su token de verificación es: <strong>").append(token).append("</strong></p>");
-        html.append("<p>Introduce este token en la app para completar el registro si estas de acuerdo.</p>");
-        html.append("<br><p>MeseroApp</p>");
-        html.append("</body></html>");
 
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        String html =
+                "<html><body style='font-family: Arial, sans-serif;'>" +
+                        "<h2>Solicitud de registro de usuario</h2>" +
+                        "<p>Hola,</p>" +
+                        "<p>El usuario <strong>" + fullName + "</strong> quiere registrarse en tu bar.</p>" +
+                        "<p>Su rol seleccionado es: <strong>" + role + "</strong></p>" +
+                        "<p>Su token de verificación es: <strong>" + token + "</strong></p>" +
+                        "<p>Introduce este token en la app para completar el registro si estás de acuerdo.</p>" +
+                        "<br><p>MeseroApp</p>" +
+                        "</body></html>";
 
-        Session session = Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(EMAIL_USERNAME, EMAIL_PASSWORD);
-            }
-        });
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(EMAIL_USERNAME, "MeseroApp"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(barEmail));
-            message.setSubject(subject);
-            message.setContent(html.toString(), "text/html; charset=utf-8");
-
-            Transport.send(message);
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return sendHtmlEmail(barEmail, subject, html);
     }
 
     public boolean sendBarVerifyEmail(String email, int token) {
+        String subject = "Verificación de nuevo bar en MeseroApp";
 
-        String subject = "Verificación de nuevo usuario en MeseroApp";
-        StringBuilder html = new StringBuilder();
-        html.append("<html><body style='font-family: Arial, sans-serif;'>");
-        html.append("<h2>Solicitud de registro de usuario</h2>");
-        html.append("<p>Hola,</p>");
-        html.append("<p>¿Estas intentando crear un bar en meseroAPP?</p>");
-        html.append("<p>Su token de verificación es: <strong>").append(token).append("</strong></p>");
-        html.append("<p>Introduce este token en la app para completar el registro del bar.</p>");
-        html.append("<br><p>MeseroApp</p>");
-        html.append("</body></html>");
+        String html =
+                "<html><body style='font-family: Arial, sans-serif;'>" +
+                        "<h2>Creación de bar</h2>" +
+                        "<p>Hola,</p>" +
+                        "<p>¿Estás intentando crear un bar en MeseroApp?</p>" +
+                        "<p>Su token de verificación es: <strong>" + token + "</strong></p>" +
+                        "<p>Introduce este token para completar el registro del bar.</p>" +
+                        "<br><p>MeseroApp</p>" +
+                        "</body></html>";
 
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        Session session = Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(EMAIL_USERNAME, EMAIL_PASSWORD);
-            }
-        });
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(EMAIL_USERNAME, "MeseroApp"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            message.setSubject(subject);
-            message.setContent(html.toString(), "text/html; charset=utf-8");
-
-            Transport.send(message);
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        return sendHtmlEmail(email, subject, html);
     }
 }
