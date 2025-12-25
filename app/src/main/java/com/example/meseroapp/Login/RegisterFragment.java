@@ -142,7 +142,7 @@ public class RegisterFragment extends Fragment {
                 int token = new Random().nextInt(9000) + 1000;
 
                 // Enviar email también fuera del UI
-                emailSenderService.sendUserVerifyEmail(barEmail, token, fullName);
+                emailSenderService.sendUserVerifyEmail(barEmail, token, fullName, role);
 
                 // Volvemos a UI para mostrar diálogo
                 requireActivity().runOnUiThread(() -> {
