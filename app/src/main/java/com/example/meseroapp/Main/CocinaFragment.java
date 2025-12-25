@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
@@ -50,11 +52,14 @@ public class CocinaFragment extends Fragment {
         int barId = SessionManager.getInstance(getContext()).getBarId();
         AppDatabase db = AppDatabase.getInstance(getContext());
 
+        Button isActiveCocinero = view.findViewById(R.id.isActiveCocinero);
+
         db.lineOrderDao()
                 .getPendingLinesByBar(barId)
                 .observe(getViewLifecycleOwner(), lineOrderAdapter::setOrder);
 
         lineOrderAdapter.setOnEditClickListener(lineOrder -> markLineAsDone(lineOrder) );
+        isActiveCocinero.setOnClickListener(v -> notifyKitchen());
     }
 
     private void markLineAsDone(LineOrder lineOrder) {
@@ -85,5 +90,45 @@ public class CocinaFragment extends Fragment {
         });
         builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         builder.show();
+    }
+
+    private void notifyKitchen() {
+        SessionManager sessionManager = SessionManager.getInstance(getContext());
+        int userId = sessionManager.getUserId();
+
+        if (userId == -1) {
+            Toast.makeText(getContext(), "No hay usuario logeado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AppDatabase db = AppDatabase.getInstance(getContext());
+
+        new Thread(() -> {
+            User user = db.userDao().getById(userId);
+
+            if (user == null) {
+                requireActivity().runOnUiThread(() ->
+                        Toast.makeText(getContext(), "Usuario no encontrado", Toast.LENGTH_SHORT).show()
+                );
+                return;
+            }
+
+            boolean nuevoEstado = !user.isActive();
+            user.setActive(nuevoEstado);
+            db.userDao().update(user);
+
+            requireActivity().runOnUiThread(() -> {
+                if (nuevoEstado) {
+                    Toast.makeText(getContext(),
+                            "Estás activo, ya te llegan las notificaciones",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(),
+                            "Estás inactivo, ya no te llegan las notificaciones",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }).start();
     }
 }

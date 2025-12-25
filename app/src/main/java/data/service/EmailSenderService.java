@@ -104,7 +104,7 @@ public class EmailSenderService {
         }
     }
 
-    public boolean sendUserVerifyEmail(String barEmail, int token, String fullName) {
+    public boolean sendUserVerifyEmail(String barEmail, int token, String fullName, String role) {
 
         String subject = "Verificación de nuevo usuario en MeseroApp";
         StringBuilder html = new StringBuilder();
@@ -112,8 +112,9 @@ public class EmailSenderService {
         html.append("<h2>Solicitud de registro de usuario</h2>");
         html.append("<p>Hola,</p>");
         html.append("<p>El usuario <strong>").append(fullName).append("</strong> quiere registrarse en tu bar.</p>");
+        html.append("<p>Su rol seleccionado es <strong>").append(role).append("</strong> en tu bar.</p>");
         html.append("<p>Su token de verificación es: <strong>").append(token).append("</strong></p>");
-        html.append("<p>Introduce este token en la app para completar el registro.</p>");
+        html.append("<p>Introduce este token en la app para completar el registro si estas de acuerdo.</p>");
         html.append("<br><p>MeseroApp</p>");
         html.append("</body></html>");
 
