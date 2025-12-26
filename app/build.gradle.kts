@@ -6,6 +6,10 @@ android {
     namespace = "com.example.meseroapp"
     compileSdk = 36
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.meseroapp"
         minSdk = 23
@@ -14,6 +18,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "EMAIL_USERNAME",
+            "\"${project.findProperty("EMAIL_USERNAME")}\""
+        )
+
+        buildConfigField(
+            "String",
+            "EMAIL_PASSWORD",
+            "\"${project.findProperty("EMAIL_PASSWORD")}\""
+        )
     }
 
     buildTypes {

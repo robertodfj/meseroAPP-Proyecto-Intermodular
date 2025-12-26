@@ -18,6 +18,7 @@ import data.dao.ProductDAO;
 import data.entity.LineOrder;
 import data.entity.Order;
 import data.entity.Product;
+import com.example.meseroapp.BuildConfig;
 
 public class EmailSenderService {
 
@@ -27,8 +28,8 @@ public class EmailSenderService {
     private final BarDAO barDAO;
 
     // Credenciales de correo
-    private static final String EMAIL_USERNAME = "meseroapp@gmail.com";
-    private static final String EMAIL_PASSWORD = "********";
+    private static final String EMAIL_USERNAME = BuildConfig.EMAIL_USERNAME;
+    private static final String EMAIL_PASSWORD = BuildConfig.EMAIL_PASSWORD;
 
     public EmailSenderService(
             OrderDAO orderDao,
