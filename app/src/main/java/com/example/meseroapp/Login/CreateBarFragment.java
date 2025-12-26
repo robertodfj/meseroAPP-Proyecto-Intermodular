@@ -32,6 +32,7 @@ public class CreateBarFragment extends Fragment {
     private BarService barService;
     private EmailSenderService emailSenderService;
 
+
     public CreateBarFragment() {}
 
     @Override
@@ -48,6 +49,13 @@ public class CreateBarFragment extends Fragment {
 
         AppDatabase db = AppDatabase.getInstance(requireContext());
         barService = new BarService(db.barDao());
+
+        emailSenderService = new EmailSenderService(
+                db.orderDao(),
+                db.productDao(),
+                db.lineOrderDao(),
+                db.barDao()
+        );
 
         etEmail = view.findViewById(R.id.etEmail);
         etBarName = view.findViewById(R.id.etBarName);
