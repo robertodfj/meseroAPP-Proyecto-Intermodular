@@ -12,17 +12,14 @@ public class UserService {
     }
 
     public boolean register(User newUser) {
-        String email = newUser.getEmail();
-        User existUser = userDao.getByEmail(email);
-
-        if (existUser != null) {
+        try {
+            userDao.insert(newUser);
+            System.out.println("Usuario registrado correctamente");
+            return true;
+        } catch (android.database.sqlite.SQLiteConstraintException e) {
             System.out.println("El email ya está en uso");
             return false;
         }
-
-        userDao.insert(newUser);
-        System.out.println("Usuario registrado correctamente");
-        return true;
     }
 
     public boolean login(String email, String password) {
