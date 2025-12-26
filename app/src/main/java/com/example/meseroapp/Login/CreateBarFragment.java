@@ -142,7 +142,7 @@ public class CreateBarFragment extends Fragment {
                                     requireActivity().runOnUiThread(() -> {
                                         new AlertDialog.Builder(requireContext())
                                                 .setTitle("ATENCIÓN")
-                                                .setMessage("Apunta este CÓDIGO BAR. Los empleados lo necesitarán: " + bar.getId())
+                                                .setMessage("Apunta este CÓDIGO BAR. Los empleados lo necesitarán: " + bar.getId() +1)
                                                 .setPositiveButton("Apuntado!", (dialog2, which2) -> {
                                                     RegisterFragment registerFragment = new RegisterFragment();
                                                     getParentFragmentManager().beginTransaction()
