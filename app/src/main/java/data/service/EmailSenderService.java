@@ -28,8 +28,8 @@ public class EmailSenderService {
     private final BarDAO barDAO;
 
     // Credenciales de correo
-    private static final String EMAIL_USERNAME = BuildConfig.EMAIL_USERNAME;
-    private static final String EMAIL_PASSWORD = BuildConfig.EMAIL_PASSWORD;
+    private static final String EMAIL_USERNAME = "meseroapp1@gmail.com";
+    private static final String EMAIL_PASSWORD = "hatnbeuojnzmnnrc";
 
     public EmailSenderService(
             OrderDAO orderDao,

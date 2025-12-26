@@ -65,39 +65,53 @@ public class CreateBarFragment extends Fragment {
             String email = etEmail.getText().toString().trim();
             String barName = etBarName.getText().toString().trim();
 
-            int token = (int) (Math.random() * 9000) + 1000;
+            if (barName.isEmpty() || email.isEmpty()) {
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Error")
+                        .setMessage("Complete todos los datos.")
+                        .setPositiveButton("OK", null)
+                        .show();
+                return;
+            }
 
             Executors.newSingleThreadExecutor().execute(() -> {
+                // Comprobar duplicados antes de cualquier acción
+                boolean existsByName = barService.existBarByBarName(barName);
+                boolean existsByEmail = barService.existsBarByEmail(email);
+
+                if (existsByName || existsByEmail) {
+                    requireActivity().runOnUiThread(() -> {
+                        String msg;
+                        if (existsByName && existsByEmail) msg = "El bar y el email ya existen.";
+                        else if (existsByName) msg = "El bar ya existe, prueba con otro nombre.";
+                        else msg = "El email ya está registrado, prueba con otro.";
+
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Error")
+                                .setMessage(msg)
+                                .setPositiveButton("OK", null)
+                                .show();
+                    });
+                    return; // Detener flujo
+                }
+
+                // Generar token
+                int token = (int) (Math.random() * 9000) + 1000;
+
+                // Enviar email
                 boolean emailSent = emailSenderService.sendBarVerifyEmail(email, token);
 
-                Bar bar = new Bar();
-                bar.setBarName(barName);
-                bar.setEmail(email);
-                barService.createBar(bar);
-
-                Boolean byEmail = barService.existsBarByEmail(email);
-                Boolean byBarName = barService.existBarByBarName(barName);
-
-                if (barName == null || barName.isEmpty() || email == null || email.isEmpty()) {
-                    new AlertDialog.Builder(requireContext())
+                if (!emailSent) {
+                    requireActivity().runOnUiThread(() -> new AlertDialog.Builder(requireContext())
                             .setTitle("Error")
-                            .setMessage("Complete todos los datos.")
+                            .setMessage("No se pudo enviar el email. Revisa tu conexión.")
                             .setPositiveButton("OK", null)
-                            .show();
+                            .show());
                     return;
                 }
 
+                // Mostrar diálogo para introducir token
                 requireActivity().runOnUiThread(() -> {
-                    if (!emailSent) {
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle("Error")
-                                .setMessage("No se pudo enviar el email. Revisa tu conexión.")
-                                .setPositiveButton("OK", null)
-                                .show();
-                        return;
-                    }
-
-                    // Mostrar diálogo para introducir token
                     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                     builder.setTitle("Verificar email");
                     builder.setMessage("Introduce el token enviado al correo:");
@@ -118,19 +132,28 @@ public class CreateBarFragment extends Fragment {
                             if (tokenIngresado.equals(String.valueOf(token))) {
                                 dialog.dismiss();
 
-                                // Mostrar código del bar
-                                AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext());
-                                builder2.setTitle("ATENCIÓN");
-                                builder2.setMessage("Apunta este CÓDIGO BAR. Los empleados lo necesitarán: " + bar.getId());
-                                builder2.setPositiveButton("Apuntado!", (dialog2, which2) -> {
-                                    RegisterFragment registerFragment = new RegisterFragment();
-                                    getParentFragmentManager().beginTransaction()
-                                            .replace(R.id.fragment_container, registerFragment)
-                                            .addToBackStack(null)
-                                            .commit();
+                                // **Crear el bar aquí, solo si el token es correcto**
+                                Executors.newSingleThreadExecutor().execute(() -> {
+                                    Bar bar = new Bar();
+                                    bar.setBarName(barName);
+                                    bar.setEmail(email);
+                                    barService.createBar(bar);
+
+                                    requireActivity().runOnUiThread(() -> {
+                                        new AlertDialog.Builder(requireContext())
+                                                .setTitle("ATENCIÓN")
+                                                .setMessage("Apunta este CÓDIGO BAR. Los empleados lo necesitarán: " + bar.getId())
+                                                .setPositiveButton("Apuntado!", (dialog2, which2) -> {
+                                                    RegisterFragment registerFragment = new RegisterFragment();
+                                                    getParentFragmentManager().beginTransaction()
+                                                            .replace(R.id.fragment_container, registerFragment)
+                                                            .addToBackStack(null)
+                                                            .commit();
+                                                })
+                                                .setCancelable(false)
+                                                .show();
+                                    });
                                 });
-                                builder2.setCancelable(false);
-                                builder2.show();
 
                             } else {
                                 input.setError("Token incorrecto");
