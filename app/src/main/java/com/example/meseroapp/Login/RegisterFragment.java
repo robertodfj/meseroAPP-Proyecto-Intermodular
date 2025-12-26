@@ -61,6 +61,12 @@ public class RegisterFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         AppDatabase db = AppDatabase.getInstance(requireContext());
+        emailSenderService = new EmailSenderService(
+                db.orderDao(),
+                db.productDao(),
+                db.lineOrderDao(),
+                db.barDao()
+        );
         userService = new UserService(db.userDao());
         barDAO = db.barDao();
 
@@ -114,8 +120,8 @@ public class RegisterFragment extends Fragment {
             String role = spinnerOpciones.getText().toString();
             String barText = etBar.getText().toString().trim();
 
-            if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || barText.isEmpty()) {
-                Toast.makeText(requireContext(), "Rellena todos los campos", Toast.LENGTH_SHORT).show();
+            if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || barText.isEmpty() || role.isEmpty()) {
+                Toast.makeText(requireContext(), "Rellena todos los campos para continuar", Toast.LENGTH_SHORT).show();
                 return;
             }
 
