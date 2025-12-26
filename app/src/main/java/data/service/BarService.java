@@ -39,6 +39,16 @@ public class BarService {
         return false;
     }
 
+    public boolean existsBarByEmail(String email) {
+        Bar bar = barDao.getByEmail(email);
+        return bar != null;
+    }
+
+    public boolean existBarByBarName(String barName) {
+        Bar bar = barDao.getByEmail(barName);
+        return bar != null;
+    }
+
     public boolean editBar(int id, String newName, String newEmail) {
         Bar bar = barDao.getById(id);
 

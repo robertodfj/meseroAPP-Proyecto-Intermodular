@@ -66,16 +66,38 @@ public class CreateBarFragment extends Fragment {
             String barName = etBarName.getText().toString().trim();
 
             int token = (int) (Math.random() * 9000) + 1000;
-            emailSenderService.sendBarVerifyEmail(email, token);
-            System.out.println(token);
 
-            // EJECUTAR EN HILO SECUNDARIO PARA NO CRASH
             Executors.newSingleThreadExecutor().execute(() -> {
+                boolean emailSent = emailSenderService.sendBarVerifyEmail(email, token);
 
+                Bar bar = new Bar();
+                bar.setBarName(barName);
+                bar.setEmail(email);
+                barService.createBar(bar);
 
+                Boolean byEmail = barService.existsBarByEmail(email);
+                Boolean byBarName = barService.existBarByBarName(barName);
+
+                if (barName == null || barName.isEmpty() || email == null || email.isEmpty()) {
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle("Error")
+                            .setMessage("Complete todos los datos.")
+                            .setPositiveButton("OK", null)
+                            .show();
+                    return;
+                }
 
                 requireActivity().runOnUiThread(() -> {
-                    // PRIMER DIALOGO: TOKEN
+                    if (!emailSent) {
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Error")
+                                .setMessage("No se pudo enviar el email. Revisa tu conexión.")
+                                .setPositiveButton("OK", null)
+                                .show();
+                        return;
+                    }
+
+                    // Mostrar diálogo para introducir token
                     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                     builder.setTitle("Verificar email");
                     builder.setMessage("Introduce el token enviado al correo:");
@@ -92,29 +114,14 @@ public class CreateBarFragment extends Fragment {
                     dialog.setOnShowListener(d1 -> {
                         Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
                         button.setOnClickListener(v1 -> {
-
                             String tokenIngresado = input.getText().toString().trim();
-
                             if (tokenIngresado.equals(String.valueOf(token))) {
                                 dialog.dismiss();
 
-                                Bar bar = new Bar();
-                                bar.setBarName(barName);
-                                bar.setEmail(email);
-                                barService.createBar(bar);
-
-                                // SEGUNDO DIALOGO: MOSTRAR ID DEL BAR
+                                // Mostrar código del bar
                                 AlertDialog.Builder builder2 = new AlertDialog.Builder(requireContext());
                                 builder2.setTitle("ATENCIÓN");
-                                builder2.setMessage("Apunta este CÓDIGO BAR. Los empleados lo necesitarán para registrarse.");
-
-                                TextView textView = new TextView(requireContext());
-                                textView.setPadding(50, 30, 50, 30);
-                                textView.setTextSize(20);
-                                textView.setText("CÓDIGO BAR: " + bar.getId());
-
-                                builder2.setView(textView);
-
+                                builder2.setMessage("Apunta este CÓDIGO BAR. Los empleados lo necesitarán: " + bar.getId());
                                 builder2.setPositiveButton("Apuntado!", (dialog2, which2) -> {
                                     RegisterFragment registerFragment = new RegisterFragment();
                                     getParentFragmentManager().beginTransaction()
@@ -122,7 +129,6 @@ public class CreateBarFragment extends Fragment {
                                             .addToBackStack(null)
                                             .commit();
                                 });
-
                                 builder2.setCancelable(false);
                                 builder2.show();
 
@@ -133,7 +139,6 @@ public class CreateBarFragment extends Fragment {
                     });
 
                     dialog.show();
-
                 });
             });
         });
