@@ -13,17 +13,14 @@ public class BarService {
         this.barDao = barDao;
     }
 
-    public boolean createBar(Bar bar) {
+    public long createBar(Bar bar) {
         Bar existBar = barDao.getByName(bar.getBarName());
 
-        if (existBar == null) {
-            barDao.insert(bar);
-            System.out.println("Bar '" + bar.getBarName() + "' creado correctamente");
-            return true;
+        if (existBar != null) {
+            return -1; // Ya existe
         }
 
-        System.out.println("Bar '" + bar.getBarName() + "' ya existe, prueba con otro nombre");
-        return false;
+        return barDao.insert(bar);
     }
 
     public boolean deleteBar(int id) {

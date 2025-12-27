@@ -137,8 +137,21 @@ public class CreateBarFragment extends Fragment {
                                     Bar bar = new Bar();
                                     bar.setBarName(barName);
                                     bar.setEmail(email);
-                                    barService.createBar(bar);
-                                    int barcode = bar.getId() +1;
+
+                                    long barId = barService.createBar(bar);
+
+                                    if (barId == -1) {
+                                        requireActivity().runOnUiThread(() ->
+                                                new AlertDialog.Builder(requireContext())
+                                                        .setTitle("Error")
+                                                        .setMessage("No se pudo crear el bar. Inténtalo de nuevo.")
+                                                        .setPositiveButton("OK", null)
+                                                        .show()
+                                        );
+                                        return;
+                                    }
+
+                                    int barcode = (int) barId;
 
                                     requireActivity().runOnUiThread(() -> {
                                         new AlertDialog.Builder(requireContext())

@@ -13,7 +13,7 @@ import data.entity.BarWithUsers;
 public interface BarDAO {
 
     @Insert
-    void insert(Bar bar);
+    long insert(Bar bar);
 
     @Query("SELECT * FROM `Bar` WHERE id = :id")
     Bar getById(int id);
