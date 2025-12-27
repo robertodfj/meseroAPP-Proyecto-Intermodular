@@ -484,9 +484,10 @@ public class CamareroFragment extends Fragment {
     private void viewPendingOrders() {
         PendingOrderCamarero pendingOrderCamarero = new PendingOrderCamarero();
 
-        getParentFragmentManager()
+        requireActivity()
+                .getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, pendingOrderCamarero)
+                .replace(R.id.fragment_containerMain, new PendingOrderCamarero())
                 .addToBackStack(null)
                 .commit();
     }
