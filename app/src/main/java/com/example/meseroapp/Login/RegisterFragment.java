@@ -28,6 +28,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Random;
 
 import data.dao.BarDAO;
+import data.dao.UserDAO;
 import data.database.AppDatabase;
 import data.entity.Bar;
 import data.entity.User;
@@ -44,6 +45,7 @@ public class RegisterFragment extends Fragment {
 
     private UserService userService;
     private BarDAO barDAO;
+    private UserDAO userDAO;
     private EmailSenderService emailSenderService;
 
     public RegisterFragment() {}
@@ -135,11 +137,19 @@ public class RegisterFragment extends Fragment {
 
             new Thread(() -> {
 
-                Bar bar = barDAO.getById(barId);
+                Bar bar = db.barDao().getById(barId);
+                User userExist = db.userDao().getByEmail(email);
                 if (bar == null) {
                     // Volvemos al UI para mostrar mensaje
                     requireActivity().runOnUiThread(() ->
                             Toast.makeText(requireContext(), "No existe un bar con ese ID", Toast.LENGTH_SHORT).show()
+                    );
+                    return; // salimos del hilo secundario
+                }
+                if (userExist != null){
+                    // Volvemos al UI para mostrar mensaje
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(requireContext(), "El email ya esta en uso", Toast.LENGTH_SHORT).show()
                     );
                     return; // salimos del hilo secundario
                 }
