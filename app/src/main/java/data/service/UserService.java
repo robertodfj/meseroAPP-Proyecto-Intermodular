@@ -22,14 +22,15 @@ public class UserService {
         }
     }
 
-    public boolean login(String email, String password) {
+    public User loginAndGetUser(String email, String password) {
         User user = userDao.getByEmail(email);
+
         if (user != null && user.getPassword().equals(password)) {
             System.out.println("Login exitoso");
-            return true;
+            return user;
         } else {
             System.out.println("Email o contraseña incorrectos");
-            return false;
+            return null;
         }
     }
 

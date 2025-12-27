@@ -16,8 +16,10 @@ import com.example.meseroapp.Main.MainActivity;
 import com.example.meseroapp.R;
 
 import data.database.AppDatabase;
+import data.entity.User;
 import data.service.UserService;
 
+import com.example.meseroapp.utils.SessionManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -73,10 +75,13 @@ public class LoginFragment extends Fragment {
             String password = etPassword.getText().toString().trim();
 
             new Thread(() -> {
-                boolean success = userService.login(email, password);
+                User user = userService.loginAndGetUser(email, password);
 
                 requireActivity().runOnUiThread(() -> {
-                    if (success) {
+                    if (user != null) {
+                        SessionManager.getInstance(requireContext())
+                                .saveSession(user.getId(), user.getBarId(), user.getRol());
+
                         Intent intent = new Intent(requireContext(), MainActivity.class);
                         startActivity(intent);
                         requireActivity().finish();
