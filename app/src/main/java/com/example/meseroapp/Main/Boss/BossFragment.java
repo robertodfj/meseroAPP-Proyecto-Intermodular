@@ -41,7 +41,7 @@ public class BossFragment extends Fragment {
             public void onClick(View v) {
                 ProductFragment productFragment = new ProductFragment();
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, productFragment) // frameLayout del Activity
+                        .replace(R.id.fragment_containerMain, productFragment) // frameLayout del Activity
                         .addToBackStack(null) // permite volver con el botón atrás
                         .commit();
             }
@@ -53,7 +53,7 @@ public class BossFragment extends Fragment {
             public void onClick(View v) {
                 UsersFragment usersFragment = new UsersFragment();
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, usersFragment) // frameLayout del Activity
+                        .replace(R.id.fragment_containerMain, usersFragment) // frameLayout del Activity
                         .addToBackStack(null) // permite volver con el botón atrás
                         .commit();
             }
@@ -64,7 +64,7 @@ public class BossFragment extends Fragment {
             public void onClick(View v) {
                 CocinaFragment cocinaFragment = new CocinaFragment();
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, cocinaFragment) // frameLayout del Activity
+                        .replace(R.id.fragment_containerMain, cocinaFragment) // frameLayout del Activity
                         .addToBackStack(null) // permite volver con el botón atrás
                         .commit();
             }
@@ -75,7 +75,7 @@ public class BossFragment extends Fragment {
             public void onClick(View v) {
                 CamareroFragment camareroFragment = new CamareroFragment();
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, camareroFragment) // frameLayout del Activity
+                        .replace(R.id.fragment_containerMain, camareroFragment) // frameLayout del Activity
                         .addToBackStack(null) // permite volver con el botón atrás
                         .commit();
             }
