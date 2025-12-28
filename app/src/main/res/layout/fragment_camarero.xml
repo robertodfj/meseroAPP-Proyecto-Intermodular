@@ -19,8 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_margin="36dp">
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/viewOrders"
@@ -29,7 +30,8 @@
             android:text="Comandas"
             android:layout_marginBottom="12dp"
             app:icon="@android:drawable/ic_menu_view"
-            app:iconPadding="8dp" />
+            app:iconPadding="8dp"
+            android:layout_marginRight="10dp"/>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/addTable"
@@ -37,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Añadir mesa"
             app:icon="@android:drawable/ic_input_add"
-            app:iconPadding="8dp" />
+            app:iconPadding="8dp"/>
 
     </LinearLayout>
 
