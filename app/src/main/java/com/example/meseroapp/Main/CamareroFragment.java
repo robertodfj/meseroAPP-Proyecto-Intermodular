@@ -173,11 +173,30 @@ public class CamareroFragment extends Fragment {
         Spinner spinnerProducts = new Spinner(requireContext());
         layout.addView(spinnerProducts);
 
-        ArrayAdapter<Product> spinnerAdapter = new ArrayAdapter<>(
+        ArrayAdapter<Product> spinnerAdapter = new ArrayAdapter<Product>(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
                 cachedProducts
-        );
+        ) {
+            // VISTA CERRADA (cuando NO está desplegado)
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(getResources().getColor(android.R.color.black)); // 👈 texto oscuro
+                tv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                return tv;
+            }
+
+            // VISTA ABIERTA (dropdown)
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getDropDownView(position, convertView, parent);
+                tv.setTextColor(getResources().getColor(android.R.color.white)); // 👈 blanco
+                tv.setBackgroundColor(0xFF1E1E1E); // fondo oscuro
+                return tv;
+            }
+        };
+
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerProducts.setAdapter(spinnerAdapter);
 
