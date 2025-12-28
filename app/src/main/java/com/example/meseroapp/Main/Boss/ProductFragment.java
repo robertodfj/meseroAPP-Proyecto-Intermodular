@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -25,6 +26,9 @@ import data.database.AppDatabase;
 import data.entity.Product;
 
 public class ProductFragment extends Fragment {
+
+    private AppDatabase db;
+    private int barId;
 
     @Nullable
     @Override
@@ -43,92 +47,138 @@ public class ProductFragment extends Fragment {
         ProductAdapter adapter = new ProductAdapter();
         recycler.setAdapter(adapter);
 
-        int barId = SessionManager.getInstance(getContext()).getBarId();
-        AppDatabase db = AppDatabase.getInstance(getContext());
+        FloatingActionButton addProduct = view.findViewById(R.id.addProduct);
+
+        barId = SessionManager.getInstance(getContext()).getBarId();
+        db = AppDatabase.getInstance(getContext());
 
         db.productDao()
                 .getProductsByBarId(barId)
                 .observe(getViewLifecycleOwner(), adapter::setProducts);
 
-        adapter.setOnEditClickListener(product -> {
+        addProduct.setOnClickListener(v -> addProductBar());
+        adapter.setOnEditClickListener(product -> showEditDialog(product));
+    }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("Editar producto");
+    //Añadir un nuevo producto
+    private void addProductBar() {
 
-            LinearLayout layout = new LinearLayout(requireContext());
-            layout.setOrientation(LinearLayout.VERTICAL);
-            layout.setPadding(50, 40, 50, 10);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Añadir producto");
 
-            TextInputLayout tilName = new TextInputLayout(requireContext());
-            TextInputEditText etName = new TextInputEditText(requireContext());
-            tilName.setHint("Nombre del producto");
-            etName.setText(product.getProductName());
-            tilName.addView(etName);
+        LinearLayout layout = new LinearLayout(requireContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10);
 
-            TextInputLayout tilPrice = new TextInputLayout(requireContext());
-            TextInputEditText etPrice = new TextInputEditText(requireContext());
-            tilPrice.setHint("Precio");
-            etPrice.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            etPrice.setText(String.valueOf(product.getPrice()));
-            tilPrice.addView(etPrice);
+        TextInputEditText etName = new TextInputEditText(requireContext());
+        etName.setHint("Nombre del producto");
 
-            TextInputLayout tilStock = new TextInputLayout(requireContext());
-            TextInputEditText etStock = new TextInputEditText(requireContext());
-            tilStock.setHint("Stock");
-            etStock.setInputType(InputType.TYPE_CLASS_NUMBER);
-            etStock.setText(String.valueOf(product.getStock()));
-            tilStock.addView(etStock);
+        TextInputEditText etPrice = new TextInputEditText(requireContext());
+        etPrice.setHint("Precio");
+        etPrice.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
-            layout.addView(tilName);
-            layout.addView(tilPrice);
-            layout.addView(tilStock);
+        TextInputEditText etStock = new TextInputEditText(requireContext());
+        etStock.setHint("Stock");
+        etStock.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-            builder.setView(layout);
+        layout.addView(etName);
+        layout.addView(etPrice);
+        layout.addView(etStock);
 
-            builder.setPositiveButton("Guardar", null);
-            builder.setNegativeButton("Volver", (d, w) -> d.dismiss());
-            builder.setNeutralButton("Borrar", null);
+        builder.setView(layout);
+        builder.setPositiveButton("Guardar", null);
+        builder.setNegativeButton("Cancelar", null);
 
-            AlertDialog dialog = builder.create();
-            dialog.setOnShowListener(d -> {
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(d -> {
 
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-                    if (etName.getText().toString().isEmpty()
-                            || etPrice.getText().toString().isEmpty()
-                            || etStock.getText().toString().isEmpty()) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
 
-                        Toast.makeText(getContext(),
-                                "Todos los campos son obligatorios",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if (etName.getText().toString().isEmpty()
+                        || etPrice.getText().toString().isEmpty()
+                        || etStock.getText().toString().isEmpty()) {
 
-                    new Thread(() -> {
-                        db.productDao().updateProductName(product.getId(), etName.getText().toString());
-                        db.productDao().updateProductPrice(product.getId(),
-                                Double.parseDouble(etPrice.getText().toString()));
-                        db.productDao().updateProductStock(product.getId(),
-                                Integer.parseInt(etStock.getText().toString()));
+                    Toast.makeText(getContext(),
+                            "Todos los campos son obligatorios",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Producto actualizado", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        });
-                    }).start();
-                });
+                new Thread(() -> {
+                    // Todo añadir un producto nuevo con el id del bar del usuario
 
-                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
-                    new Thread(() -> {
-                        db.productDao().delete(product);
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Producto borrado", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        });
-                    }).start();
-                });
+                    db.productDao().insert(product);
+
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(),
+                                    "Producto añadido",
+                                    Toast.LENGTH_SHORT).show()
+                    );
+                }).start();
+
+                dialog.dismiss();
+            });
+        });
+
+        dialog.show();
+    }
+
+    // Editar o borrar producto
+    private void showEditDialog(Product product) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Editar producto");
+
+        LinearLayout layout = new LinearLayout(requireContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10);
+
+        TextInputEditText etName = new TextInputEditText(requireContext());
+        etName.setText(product.getProductName());
+
+        TextInputEditText etPrice = new TextInputEditText(requireContext());
+        etPrice.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etPrice.setText(String.valueOf(product.getPrice()));
+
+        TextInputEditText etStock = new TextInputEditText(requireContext());
+        etStock.setInputType(InputType.TYPE_CLASS_NUMBER);
+        etStock.setText(String.valueOf(product.getStock()));
+
+        layout.addView(etName);
+        layout.addView(etPrice);
+        layout.addView(etStock);
+
+        builder.setView(layout);
+        builder.setPositiveButton("Guardar", null);
+        builder.setNeutralButton("Borrar", null);
+        builder.setNegativeButton("Cancelar", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(d -> {
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                new Thread(() -> {
+                    db.productDao().updateProductName(product.getId(), etName.getText().toString());
+                    db.productDao().updateProductPrice(product.getId(),
+                            Double.parseDouble(etPrice.getText().toString()));
+                    db.productDao().updateProductStock(product.getId(),
+                            Integer.parseInt(etStock.getText().toString()));
+
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(),
+                                    "Producto actualizado",
+                                    Toast.LENGTH_SHORT).show()
+                    );
+                }).start();
+                dialog.dismiss();
             });
 
-            dialog.show();
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
+                new Thread(() -> db.productDao().delete(product)).start();
+                dialog.dismiss();
+            });
         });
+
+        dialog.show();
     }
 }
