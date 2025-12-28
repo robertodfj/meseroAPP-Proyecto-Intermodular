@@ -18,9 +18,8 @@ import android.view.ViewGroup;
 
 import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import data.database.AppDatabase;
 import data.entity.Product;
@@ -47,7 +46,7 @@ public class ProductFragment extends Fragment {
         ProductAdapter adapter = new ProductAdapter();
         recycler.setAdapter(adapter);
 
-        FloatingActionButton addProduct = view.findViewById(R.id.addProduct);
+        ExtendedFloatingActionButton addProduct = view.findViewById(R.id.addProduct);
 
         barId = SessionManager.getInstance(getContext()).getBarId();
         db = AppDatabase.getInstance(getContext());
@@ -62,6 +61,7 @@ public class ProductFragment extends Fragment {
 
     //Añadir un nuevo producto
     private void addProductBar() {
+        barId = SessionManager.getInstance(getContext()).getBarId();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Añadir producto");
@@ -105,7 +105,18 @@ public class ProductFragment extends Fragment {
                 }
 
                 new Thread(() -> {
-                    // Todo añadir un producto nuevo con el id del bar del usuario
+                    if (db.productDao().getByName(etName.getText().toString(), barId) != null){
+                        Toast.makeText(getContext(),
+                                "Ese nombre de producto ya esta en uso, prueba otro",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Product product = new Product();
+                    product.setBarId(barId);
+                    product.setProductName(etName.getText().toString());
+                    product.setPrice(Double.parseDouble(etPrice.getText().toString()));
+                    product.setStock(Integer.parseInt(etStock.getText().toString()));
 
                     db.productDao().insert(product);
 

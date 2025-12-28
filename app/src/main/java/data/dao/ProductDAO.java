@@ -24,8 +24,8 @@ public interface ProductDAO {
     @Query("SELECT * FROM Product WHERE id = :id")
     Product getById(int id);
 
-    @Query("SELECT * FROM Product WHERE productName = :productName")
-    Product getByName(String productName);
+    @Query("SELECT * FROM Product WHERE productName = :productName AND barId = :barId")
+    Product getByName(String productName, int barId);
 
     @Query("UPDATE Product SET productName = :newProductName WHERE id = :id")
     void updateProductName(int id, String newProductName);
