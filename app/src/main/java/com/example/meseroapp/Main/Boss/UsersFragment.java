@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -91,11 +92,27 @@ public class UsersFragment extends Fragment {
         // Spinner para rol
         Spinner spRole = new Spinner(requireContext());
         String[] roles = {"Todos", "gerente", "cocina", "camarero"};
-        ArrayAdapter<String> adapterRole = new ArrayAdapter<>(
+        ArrayAdapter<String> adapterRole = new ArrayAdapter<String>(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
                 roles
-        );
+        ) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(getResources().getColor(android.R.color.black));
+                tv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                return tv;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getDropDownView(position, convertView, parent);
+                tv.setTextColor(getResources().getColor(android.R.color.white));
+                tv.setBackgroundColor(0xFF1E1E1E);
+                return tv;
+            }
+        };
         adapterRole.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRole.setAdapter(adapterRole);
         layout.addView(spRole);
@@ -103,11 +120,27 @@ public class UsersFragment extends Fragment {
         // Spinner para estado activo
         Spinner spActive = new Spinner(requireContext());
         String[] estados = {"Todos", "Activo", "Inactivo"};
-        ArrayAdapter<String> adapterActive = new ArrayAdapter<>(
+        ArrayAdapter<String> adapterActive = new ArrayAdapter<String>(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
                 estados
-        );
+        ) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(getResources().getColor(android.R.color.black));
+                tv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                return tv;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getDropDownView(position, convertView, parent);
+                tv.setTextColor(getResources().getColor(android.R.color.white));
+                tv.setBackgroundColor(0xFF1E1E1E);
+                return tv;
+            }
+        };
         adapterActive.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spActive.setAdapter(adapterActive);
         layout.addView(spActive);
@@ -152,13 +185,30 @@ public class UsersFragment extends Fragment {
 
         Spinner spRole = new Spinner(requireContext());
         String[] roles = {"gerente", "cocina", "camarero"};
-        ArrayAdapter<String> adapterRole = new ArrayAdapter<>(
+        ArrayAdapter<String> adapterRole = new ArrayAdapter<String>(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
                 roles
-        );
+        ) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(getResources().getColor(android.R.color.black));
+                tv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                return tv;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getDropDownView(position, convertView, parent);
+                tv.setTextColor(getResources().getColor(android.R.color.white));
+                tv.setBackgroundColor(0xFF1E1E1E);
+                return tv;
+            }
+        };
         adapterRole.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spRole.setAdapter(adapterRole);
+
         int spinnerPosition = adapterRole.getPosition(user.getRol().toLowerCase());
         spRole.setSelection(spinnerPosition);
         layout.addView(spRole);
