@@ -18,7 +18,6 @@ import data.dao.ProductDAO;
 import data.entity.LineOrder;
 import data.entity.Order;
 import data.entity.Product;
-import com.example.meseroapp.BuildConfig;
 
 public class EmailSenderService {
 
@@ -78,31 +77,43 @@ public class EmailSenderService {
     }
 
     public boolean sendOrderTicket(int orderId, String recipient) {
+
         Order order = orderDao.getById(orderId);
         if (order == null) return false;
 
         String barName = barDAO.getById(order.getBarId()).getBarName();
         List<LineOrder> lines = lineDao.getLinesByOrder(orderId);
 
+        double totalCalculado = 0.0;
+
         StringBuilder html = new StringBuilder();
         html.append("<html><body style='font-family: Arial, sans-serif;'>");
         html.append("<h2>Factura - ").append(barName).append("</h2>");
         html.append("<table border='1' cellpadding='8' cellspacing='0' width='100%'>");
-        html.append("<tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr>");
+        html.append("<tr>")
+                .append("<th>Producto</th>")
+                .append("<th>Cantidad</th>")
+                .append("<th>Precio</th>")
+                .append("<th>Subtotal</th>")
+                .append("</tr>");
 
         for (LineOrder line : lines) {
             Product product = productDao.getById(line.getProductId());
+
+            double subtotal = line.getLinePrice();
+            totalCalculado += subtotal;
+
             html.append("<tr>")
                     .append("<td>").append(product.getProductName()).append("</td>")
                     .append("<td>").append(line.getUnits()).append("</td>")
                     .append("<td>").append(product.getPrice()).append("€</td>")
-                    .append("<td>").append(line.getLinePrice()).append("€</td>")
+                    .append("<td>").append(subtotal).append("€</td>")
                     .append("</tr>");
         }
 
         html.append("<tr>")
                 .append("<td colspan='3'><strong>Total</strong></td>")
-                .append("<td><strong>").append(order.getTotalPrice()).append("€</strong></td>")
+                .append("<td><strong>").append(totalCalculado).append("€</strong></td>")
                 .append("</tr>")
                 .append("</table>")
                 .append("<p>Gracias por tu visita</p>")
@@ -123,9 +134,9 @@ public class EmailSenderService {
                         "<h2>Solicitud de registro de usuario</h2>" +
                         "<p>Hola,</p>" +
                         "<p>El usuario <strong>" + fullName + "</strong> quiere registrarse en tu bar.</p>" +
-                        "<p>Su rol seleccionado es: <strong>" + role + "</strong></p>" +
-                        "<p>Su token de verificación es: <strong>" + token + "</strong></p>" +
-                        "<p>Introduce este token en la app para completar el registro si estás de acuerdo.</p>" +
+                        "<p>Rol seleccionado: <strong>" + role + "</strong></p>" +
+                        "<p>Token de verificación: <strong>" + token + "</strong></p>" +
+                        "<p>Introduce este token en la app para completar el registro.</p>" +
                         "<br><p>MeseroApp</p>" +
                         "</body></html>";
 
@@ -140,8 +151,8 @@ public class EmailSenderService {
                         "<h2>Creación de bar</h2>" +
                         "<p>Hola,</p>" +
                         "<p>¿Estás intentando crear un bar en MeseroApp?</p>" +
-                        "<p>Su token de verificación es: <strong>" + token + "</strong></p>" +
-                        "<p>Introduce este token para completar el registro del bar.</p>" +
+                        "<p>Token de verificación: <strong>" + token + "</strong></p>" +
+                        "<p>Introduce este token para completar el registro.</p>" +
                         "<br><p>MeseroApp</p>" +
                         "</body></html>";
 
