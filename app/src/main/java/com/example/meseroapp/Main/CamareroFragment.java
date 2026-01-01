@@ -302,7 +302,7 @@ public class CamareroFragment extends Fragment {
 
     // EMAIL FACTURA
 
-    //TODO: refactorizar este método para que use un ViewModel y no bloquee el hilo principal
+    //TODO: refactorizar que no bloquee el hilo principal
 
     private void showEmailDialog(AppDatabase db, Table table) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
