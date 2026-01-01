@@ -302,8 +302,6 @@ public class CamareroFragment extends Fragment {
 
     // EMAIL FACTURA
 
-    //TODO: refactorizar que no bloquee el hilo principal
-
     private void showEmailDialog(AppDatabase db, Table table) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Enviar factura");
