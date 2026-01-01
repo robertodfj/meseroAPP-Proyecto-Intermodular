@@ -72,22 +72,26 @@ public class CocinaFragment extends Fragment {
         builder.setPositiveButton("Sí", (dialog, which) -> {
             lineOrder.setCocinaDone(true);
             lineOrder.setCamareroDone(false);
-            new Thread(() -> db.lineOrderDao().update(lineOrder)).start();
 
-            //Enviar notificación al camarero activo del bar
-            int barId = SessionManager.getInstance(getContext()).getBarId();
-            List<User> users = db.userDao().getActiveCamarero(barId);
-            if (users != null && !users.isEmpty()) {
-                for (User camarero : users) {
-                    NotificationHelper.sendNotification(
-                            requireContext(),
-                            camarero.getId(),
-                            "Pedido listo",
-                            "Un pedido ha sido marcado como listo en la cocina."
-                    );
+            new Thread(() -> {
+                db.lineOrderDao().update(lineOrder);
+
+                int barId = SessionManager.getInstance(getContext()).getBarId();
+                List<User> users = db.userDao().getActiveCamarero(barId);
+
+                if (users != null && !users.isEmpty()) {
+                    for (User camarero : users) {
+                        requireActivity().runOnUiThread(() ->
+                                NotificationHelper.sendNotification(
+                                        requireContext(),
+                                        camarero.getId(),
+                                        "Pedido listo",
+                                        "Un pedido ha sido marcado como listo en la cocina."
+                                )
+                        );
+                    }
                 }
-            }
-
+            }).start();
         });
         builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         builder.show();
