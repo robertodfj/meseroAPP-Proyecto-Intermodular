@@ -331,6 +331,10 @@ public class CamareroFragment extends Fragment {
                 db.tableDao().update(table);
                 db.orderDao().update(order);
 
+                // Asegurar total correcto
+                db.orderDao().updateTotalPrice(order.getId());
+                order = db.orderDao().getById(order.getId());
+
                 EmailSenderService service =
                         new EmailSenderService(db.orderDao(), db.productDao(), db.lineOrderDao(), db.barDao());
 
