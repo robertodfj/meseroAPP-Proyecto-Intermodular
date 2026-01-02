@@ -35,7 +35,6 @@ public class BossFragment extends Fragment {
         Button btnVerCocina = view.findViewById(R.id.btnVerCocina);
         Button btnVerMesas = view.findViewById(R.id.btnVerMesas);
 
-        // TODO:
         btnVerAlmacen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
