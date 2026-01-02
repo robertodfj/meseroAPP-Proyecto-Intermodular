@@ -29,7 +29,7 @@ public class EmailSenderService {
 
     // Credenciales de correo
     private static final String EMAIL_USERNAME = "meseroapp1@gmail.com";
-    private static final String EMAIL_PASSWORD = "hatnbeuojnzmnnrc";
+    private static final String EMAIL_PASSWORD = "cdcbiuwmdzcpqpnm";
 
     public EmailSenderService(
             OrderDAO orderDao,
