@@ -1,6 +1,5 @@
 package com.example.meseroapp.Main;
 
-import static android.text.TextUtils.replace;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -23,17 +22,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meseroapp.Login.LoginFragment;
 import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 import data.dao.OrderDAO;
-import data.dao.TableDAO;
 import data.database.AppDatabase;
 import data.entity.LineOrder;
 import data.entity.Order;

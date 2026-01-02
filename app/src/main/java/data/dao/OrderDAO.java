@@ -8,10 +8,8 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import data.entity.LineOrder;
 import data.entity.Order;
 import data.entity.OrderComplete;
-import data.entity.Product;
 
 @Dao
 public interface OrderDAO {

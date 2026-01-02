@@ -10,7 +10,6 @@ import androidx.room.Update;
 import java.util.List;
 
 import data.entity.Product;
-import data.entity.User;
 
 @Dao
 public interface ProductDAO {

@@ -1,6 +1,5 @@
 package data.service;
 
-import static java.nio.file.Files.delete;
 
 import data.dao.BarDAO;
 import data.entity.Bar;

@@ -1,12 +1,8 @@
 package data.service;
 
-import java.util.List;
-import java.util.Properties;
-
 import javax.mail.*;
 import javax.mail.internet.*;
 
-import data.dao.BarDAO;
 import data.dao.LineOrderDAO;
 import data.dao.OrderDAO;
 import data.dao.ProductDAO;

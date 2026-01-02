@@ -19,12 +19,9 @@ import com.example.meseroapp.R;
 import com.example.meseroapp.utils.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
-
 import data.database.AppDatabase;
 import data.entity.LineOrder;
 import data.entity.User;
-import data.service.NotificationHelper;
 
 
 public class PendingOrderCamarero extends Fragment {

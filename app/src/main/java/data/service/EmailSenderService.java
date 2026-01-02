@@ -18,7 +18,7 @@ import data.dao.ProductDAO;
 import data.entity.LineOrder;
 import data.entity.Order;
 import data.entity.Product;
-import com.example.meseroapp.BuildConfig;
+
 
 public class EmailSenderService {
 
