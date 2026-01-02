@@ -1,5 +1,7 @@
 # 🍽️ MeseroApp – Aplicación de Gestión de Bares y Comandas
 
+![logo mesero](https://github.com/robertodfj/meseroAPP-Proyecto-Intermodular/blob/main/image.png)
+
 **📧 Correo de pruebas:** [meseroapp1@gmail.com](mailto:meseroapp1@gmail.com)  
 **🔑 Contraseña de prueba:** Mesero1234
 
