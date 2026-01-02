@@ -20,9 +20,8 @@ public interface OrderDAO {
     @Update
     void update(Order order);
 
-    @Query("UPDATE `Order` SET totalPrice = :id")
-    void updateTotalPrice(int id);
-
+    @Query("UPDATE `Order` SET totalPrice = (SELECT IFNULL(SUM(linePrice), 0) FROM LineOrder WHERE orderId = :orderId) WHERE id = :orderId")
+    void updateTotalPrice(int orderId);
     @Query("SELECT * FROM `Order` WHERE id = :id")
     Order getById(int id);
 
