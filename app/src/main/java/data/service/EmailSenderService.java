@@ -81,6 +81,10 @@ public class EmailSenderService {
         Order order = orderDao.getById(orderId);
         if (order == null) return false;
 
+        // Calculamos el total de manera correcta (Update)
+        orderDao.updateTotalPrice(orderId);
+        order = orderDao.getById(orderId);
+
         String barName = barDAO.getById(order.getBarId()).getBarName();
         List<LineOrder> lines = lineDao.getLinesByOrder(orderId);
 
