@@ -1,4 +1,4 @@
-# 🍽️ MeseroApp – Aplicación de Gestión de Bares y Comandas
+# 🍽️ MeseroApp – Aplicación de Gestión de Bares
 
 ![logo mesero](https://github.com/robertodfj/meseroAPP-Proyecto-Intermodular/blob/main/image.png)
 
